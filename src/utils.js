@@ -1,6 +1,5 @@
-import dayjs from "dayjs";
-
-
-export function getRandomIntInclusive(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+const renderTemplate = (container, template, place) => {
+  container.insertAdjacentHTML(place, template);
 };
+
+export {renderTemplate}

@@ -16,6 +16,7 @@ const POINT_CITIES = [
   'Amsterdam',
   'Chamonix',
   'Paris',
+  'Moscow',
 ];
 
 const getRandomItemArray = (items) => POINT_TYPES[getRandomIntInclusive(0, items.length - 1)];
@@ -128,7 +129,7 @@ const offers = [
     ]
   },
   {
-    type: "Ship",
+    type: "ship",
     offers: [
       {
         "id": 5,
@@ -138,6 +139,10 @@ const offers = [
         "id": 6,
         "title": "Choose seats",
         "price": 15
+      },{
+        "id": 3,
+        "title": "Upgrade to a business class",
+        "price": 100
       }
     ]
   },
@@ -176,7 +181,7 @@ const points = [
   }),
 
   generatePoint({
-    type: 'taxi',
+    //type: 'taxi',
     destination: destinations[1],
     startDate: new Date('2021-12-01T10:00:56.845Z'),
     finishDate: new Date('2021-12-01T12:00:56.845Z'),
@@ -195,4 +200,6 @@ export {
   points,
   destinations,
   offers,
+  POINT_CITIES,
+  POINT_TYPES,
 };

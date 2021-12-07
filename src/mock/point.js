@@ -78,7 +78,7 @@ const destinations = [
     ]
   },
     {
-    description: "[description]",
+    description: generateDescription(),
     name: "Moscow",
     pictures: [
       {
@@ -88,7 +88,7 @@ const destinations = [
     ]
   },
   {
-    description: "[description]",
+    description: generateDescription(),
     name: "Paris",
     pictures: [
       {
@@ -150,7 +150,7 @@ const offers = [
 
 export const generatePoint = ({
   id = '0',
-  price = 0,
+  basePrice = 0,
   type = getRandomType(),
   destination = destinations[0],
   startDate = new Date(),
@@ -181,16 +181,17 @@ const points = [
   }),
 
   generatePoint({
-    //type: 'taxi',
+    type: 'taxi',
     destination: destinations[1],
     startDate: new Date('2021-12-01T10:00:56.845Z'),
     finishDate: new Date('2021-12-01T12:00:56.845Z'),
-    price: 100,
+    basePrice: 100,
+    offers: offers.find((offer) => offer.type = 'taxi').offers,
   }),
 
   generatePoint({
     type: 'bus',
-    price: 500,
+    basePrice: 500,
     startDate: new Date('2021-12-01T16:00:56.845Z'),
     finishDate: new Date('2021-12-03T12:00:56.845Z'),
   }),

@@ -1,6 +1,5 @@
 import {POINT_CITIES, POINT_TYPES} from '../mock/point.js';
 import dayjs from 'dayjs';
-import { points, destinations, offers } from '../mock/point.js';
 
 const createEventType = POINT_TYPES
   .map((item) => (

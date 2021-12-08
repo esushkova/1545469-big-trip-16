@@ -1,4 +1,4 @@
-import {getRandomIntInclusive} from './random.js'
+import { getRandomIntInclusive } from './random.js'
 
 const POINT_TYPES = [
   'taxi',
@@ -21,21 +21,8 @@ const POINT_CITIES = [
 
 const getRandomItemArray = (items) => POINT_TYPES[getRandomIntInclusive(0, items.length - 1)];
 
-//Случайный город из массива
-const getCity = () => getRandomItemArray(POINT_CITIES);
-
 //Случаный тип
 const getRandomType = () => getRandomItemArray(POINT_TYPES);
-
-//случайные фото
-const getRandomPhotos = () => {
-  const photos = [];
-  const count = getRandomIntInclusive(0, 5);
-  for (let i = 0; i < count; i++) {
-    photos.push(`http://picsum.photos/248/152?r=${getRandomIntInclusive(0, 100)}`);
-  }
-  return photos;
-};
 
 //избранное или нет
 const getIsFavourite = () => Boolean(getRandomIntInclusive(0, 1));
@@ -57,7 +44,7 @@ const generateDescription = () => {
   let descriptionArray = [];
   const randomCount = getRandomIntInclusive(1, 5);
 
-  for(let i = 1; i <= randomCount; i++) {
+  for (let i = 1; i <= randomCount; i++) {
     const randomIndex = getRandomIntInclusive(0, description.length - 1);
 
     descriptionArray.push(description[randomIndex]);
@@ -69,7 +56,7 @@ const generateDescription = () => {
 const destinations = [
   {
     description: generateDescription(),
-    name: getCity(),
+    name: 'Rome',
     pictures: [
       {
         src: "http://picsum.photos/300/200?r=0.0762563005163317",
@@ -77,7 +64,7 @@ const destinations = [
       }
     ]
   },
-    {
+  {
     description: generateDescription(),
     name: "Moscow",
     pictures: [
@@ -99,6 +86,56 @@ const destinations = [
   },
 ];
 
+const OFFER_TITLES = [
+  // taxi
+  'Upgrade to a business class',
+  'Choose the radio station',
+  'Choose temperature',
+  'Drive quickly, I\'m in a hurry',
+  'Drive slowly',
+
+  // bus
+  'Infotainment system',
+  'Order meal',
+  'Choose seats',
+
+  // restaurant
+  'Choose live music',
+  'Choose VIP area',
+
+  // train
+  'Book a taxi at the arrival point',
+  'Order a breakfast',
+  'Wake up at a certain time',
+];
+
+const getRandomArrayItem = (items) => items[getRandomIntInclusive(0, items.length - 1)];
+
+const generatePoorId = () => +String(Math.random()).slice(-5);
+
+const generateOffer = ({
+  id = generatePoorId(),
+  title = getRandomArrayItem(OFFER_TITLES),
+  price = getRandomIntInclusive(0, 100),
+} = {}) => ({
+  id,
+  title,
+  price,
+});
+
+export const pointTypeToOffers = POINT_TYPES.reduce((map, type) => {
+  map[type] = [];
+  return map;
+}, {})
+
+pointTypeToOffers['taxi'] = [
+  ...Array.from({ length: 2 }, generateOffer),
+  generateOffer({
+    title: 'Wi-Fi',
+    price: 100,
+  })
+];
+
 const offers = [
   {
     type: "taxi",
@@ -114,7 +151,7 @@ const offers = [
       }
     ]
   },
-    {
+  {
     type: "bus",
     offers: [
       {
@@ -139,8 +176,8 @@ const offers = [
         "id": 6,
         "title": "Choose seats",
         "price": 15
-      },{
-        "id": 3,
+      }, {
+        "id": 7,
         "title": "Upgrade to a business class",
         "price": 100
       }
@@ -150,30 +187,36 @@ const offers = [
 
 export const generatePoint = ({
   id = '0',
-  basePrice = 0,
+  basePrice = getRandomIntInclusive(0, 100),
   type = getRandomType(),
   destination = destinations[0],
   startDate = new Date(),
   finishDate = new Date(),
   offers = [],
   isFavorite = getIsFavourite(),
-  } = {}) => {
+} = {}) => {
 
   return {
     id,
     type,
-    destination: destinations[0],
+    destination,
     isFavorite,
-    basePrice: getRandomIntInclusive(0, 100),
+    basePrice,
     startDate,
     finishDate,
-    offers: [],
+    offers: [
+      {
+        "id": 1,
+        "title": "Upgrade to a business class",
+        "price": 120
+      },
+    ],
   };
 };
 
 const points = [
   generatePoint({
-    //type: 'restaurant',
+    type: 'taxi',
     destination: destinations[0],
     startDate: new Date('2021-11-29T22:55:56.845Z'),
     finishDate: new Date('2021-11-31T22:55:56.845Z'),

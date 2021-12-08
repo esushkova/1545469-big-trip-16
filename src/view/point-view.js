@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 
-
 const createPointTemplate = (point) => {
   const { type, startDate, finishDate, isFavorite, offers, basePrice } = point;
 
@@ -11,20 +10,18 @@ const createPointTemplate = (point) => {
     ? 'event__favorite-btn--active'
     : '';
 
-
-    const createOfferTemplate = ({ title, price }) => {
-     return `<li class="event__offer">
+  const createOfferTemplate = ({ title, price }) => {
+    return `<li class="event__offer">
            <span class="event__offer-title">${title}</span>
            &plus;&euro;&nbsp;
            <span class="event__offer-price">${price}</span>
        </li>`
-    };
+  };
 
-    const offersTemplate = offers.map(createOfferTemplate).join('');
-
+  const offersTemplate = offers.map(createOfferTemplate).join('');
 
   return (
-  `<li class="trip-events__item">
+    `<li class="trip-events__item">
     <div class="event">
       <time class="event__date" datetime="${startTime.format('MMM-D')}">${startTime.format('MMM D')}</time>
       <div class="event__type">

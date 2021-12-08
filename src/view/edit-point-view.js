@@ -1,25 +1,31 @@
-import {POINT_CITIES, POINT_TYPES} from '../mock/point.js';
+import { offers, POINT_CITIES, POINT_TYPES } from '../mock/point.js';
 import dayjs from 'dayjs';
 
 const createEventType = POINT_TYPES
   .map((item) => (
-`<div class="event__type-item">
+    `<div class="event__type-item">
           <input id="event-type-${item}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item}">
           <label class="event__type-label  event__type-label--${item}" for="event-type-${item}-1">${item}</label>
         </div>`
-))
+  ))
   .join('');
 
-const getOffersList = (offers) => {
+const createOffersListTemplate = (allOffers) => {
 
   return `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
       <div class="event__available-offers">
-      ${offers.map(({id, title, price}) =>
-        `<div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="${id}" type="checkbox" name="event-offer-luggage" checked>
-          <label class="event__offer-label" for="event-offer-luggage-1">
+      ${allOffers.map(({ id, title, price, isChecked = false }) =>
+    `<div class="event__offer-selector">
+          <input
+          class="event__offer-checkbox  visually-hidden"
+          id="${id}"
+          type="checkbox"
+          name="${title}"
+          ${isChecked ? 'checked' : ''}
+          >
+          <label class="event__offer-label" for="${id}">
             <span class="event__offer-title">${title}</span>
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${price}</span>
@@ -29,23 +35,28 @@ const getOffersList = (offers) => {
     </section>`
 };
 
-const getCitiesList = () => POINT_CITIES.map((city) => `<option value="${city}"></option>`).join('');
+const createDestinationListTemplate = (destinations) =>
+  destinations.map(({ name }) => `<option value="${name}"></option>`).join('');
 
-/*
-const getCloseButtons = () => должна быть какая-то проверка ?
-    '<button class="event__reset-btn" type="reset">Close</button>' :
-    `<button class="event__reset-btn" type="reset">Delete</button>
-    <button class="event__rollup-btn" type="button">
-      <span class="visually-hidden">Open event</span>
-    </button>`;
-*/
+const createEditPointTemplate = (point, destinations, typeOffers) => {
+  const { type, startDate, finishDate, offers, destination, basePrice } = point;
 
-const editPointTemplate = (point) => {
-  const { type, startDate, finishDate, offers, destination} = point;
+  // убрать в функцию
+  const allOffers = [];
+  typeOffers.forEach((typeOffer) => {
+    allOffers.push({
+      ...typeOffer,
+      isChecked: offers.some((offer) => offer.id === typeOffer.id),
+    })
+  });
+
+  // можно без переменной
+  const offersTemplate = createOffersListTemplate(allOffers);
+
   const startTime = dayjs(startDate);
   const endTime = dayjs(finishDate);
 
-return `<li class="trip-events__item">
+  return `<li class="trip-events__item">
 <form class="event event--edit" action="#" method="post">
   <header class="event__header">
     <div class="event__type-wrapper">
@@ -58,7 +69,6 @@ return `<li class="trip-events__item">
       <div class="event__type-list">
         <fieldset class="event__type-group">
           <legend class="visually-hidden">Event type</legend>
-
           ${createEventType}
         </fieldset>
       </div>
@@ -68,9 +78,15 @@ return `<li class="trip-events__item">
       <label class="event__label  event__type-output" for="event-destination-1">
         ${type}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
+      <input
+      class="event__input  event__input--destination"
+      id="event-destination-1"
+      type="text"
+      name="event-destination"
+      value="${destination.name}"
+      list="destination-list-1">
       <datalist id="destination-list-1">
-      ${getCitiesList()}
+      ${createDestinationListTemplate(destinations)}
       </datalist>
     </div>
 
@@ -87,17 +103,18 @@ return `<li class="trip-events__item">
         <span class="visually-hidden">Price</span>
         &euro;
       </label>
-      <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="160">
+      <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
     </div>
 
+    <button class="event__reset-btn" type="reset">Close</button>
 
-    //getCloseButtons()
-
+    <button class="event__rollup-btn" type="button">
+      <span class="visually-hidden">Open event</span>
 
   </header>
   <section class="event__details">
 
-  ${getOffersList(offers)}
+  ${offersTemplate}
 
     <section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -108,4 +125,4 @@ return `<li class="trip-events__item">
 </li>`
 };
 
-export {editPointTemplate}
+export { createEditPointTemplate }

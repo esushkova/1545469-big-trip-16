@@ -1,4 +1,4 @@
-import { offers, POINT_CITIES, POINT_TYPES } from '../mock/point.js';
+import { POINT_TYPES } from '../mock/point.js';
 import dayjs from 'dayjs';
 
 const createEventType = POINT_TYPES
@@ -32,7 +32,7 @@ const createOffersListTemplate = (allOffers) => {
           </label>
         </div>`).join('')}
       </div>
-    </section>`
+    </section>`;
 };
 
 const createDestinationListTemplate = (destinations) =>
@@ -47,7 +47,7 @@ const createEditPointTemplate = (point, destinations, typeOffers) => {
     allOffers.push({
       ...typeOffer,
       isChecked: offers.some((offer) => offer.id === typeOffer.id),
-    })
+    });
   });
 
   // можно без переменной
@@ -122,7 +122,7 @@ const createEditPointTemplate = (point, destinations, typeOffers) => {
     </section>
   </section>
 </form>
-</li>`
+</li>`;
 };
 
-export { createEditPointTemplate }
+export { createEditPointTemplate };

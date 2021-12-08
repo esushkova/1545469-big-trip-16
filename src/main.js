@@ -4,7 +4,7 @@ import { createSortTemplate } from './view/sort-view.js';
 import { createPointTemplate } from './view/point-view.js';
 import { createEditPointTemplate } from './view/edit-point-view.js';
 import { createPointListTemplate } from './view/list-view.js';
-import { renderTemplate } from './utils.js'
+import { renderTemplate } from './utils.js';
 import { points, destinations, offers, pointTypeToOffers } from './mock/point.js';
 
 const RenderPosition = {
@@ -18,11 +18,10 @@ const menuContainer = document.querySelector('.trip-controls__navigation');
 const filtersContainer = document.querySelector('.trip-controls__filters');
 const contentContainer = document.querySelector('.trip-events');
 
-renderTemplate(menuContainer, createMenuTemplate(), RenderPosition.AFTER_BEGIN)
-renderTemplate(filtersContainer, createFiltersTemplate(), RenderPosition.AFTER_BEGIN)
-renderTemplate(contentContainer, createSortTemplate(), RenderPosition.AFTER_BEGIN)
-
-renderTemplate(contentContainer, createPointListTemplate(), RenderPosition.AFTER_END)
+renderTemplate(menuContainer, createMenuTemplate(), RenderPosition.AFTER_BEGIN);
+renderTemplate(filtersContainer, createFiltersTemplate(), RenderPosition.AFTER_BEGIN);
+renderTemplate(contentContainer, createSortTemplate(), RenderPosition.AFTER_BEGIN);
+renderTemplate(contentContainer, createPointListTemplate(), RenderPosition.AFTER_END);
 
 const pointList = document.querySelector('.trip-events__list');
 
@@ -53,4 +52,4 @@ const point1 = points[0];
 
 const point1Offers = offers.find((offer) => offer.type === point1.type).offers || [];
 
-renderTemplate(pointList, createEditPointTemplate(point1, destinations, point1Offers), RenderPosition.BEFORE_BEGIN)
+renderTemplate(pointList, createEditPointTemplate(point1, destinations, point1Offers), RenderPosition.BEFORE_BEGIN);

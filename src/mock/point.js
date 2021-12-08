@@ -1,4 +1,4 @@
-import { getRandomIntInclusive } from './random.js'
+import { getRandomIntInclusive } from './random.js';
 
 const POINT_TYPES = [
   'taxi',
@@ -41,7 +41,7 @@ const generateDescription = () => {
     'In rutrum ac purus sit amet tempus.',
   ];
 
-  let descriptionArray = [];
+  const descriptionArray = [];
   const randomCount = getRandomIntInclusive(1, 5);
 
   for (let i = 1; i <= randomCount; i++) {
@@ -59,28 +59,28 @@ const destinations = [
     name: 'Rome',
     pictures: [
       {
-        src: "http://picsum.photos/300/200?r=0.0762563005163317",
-        description: "[photo description]"
+        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+        description: '[photo description]'
       }
     ]
   },
   {
     description: generateDescription(),
-    name: "Moscow",
+    name: 'Moscow',
     pictures: [
       {
-        src: "http://picsum.photos/300/200?r=0.0762563005163317",
-        description: "[photo description]"
+        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+        description: '[photo description]'
       }
     ]
   },
   {
     description: generateDescription(),
-    name: "Paris",
+    name: 'Paris',
     pictures: [
       {
-        src: "http://picsum.photos/300/200?r=0.0762563005163317",
-        description: "[photo description]"
+        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+        description: '[photo description]'
       }
     ]
   },
@@ -126,7 +126,7 @@ const generateOffer = ({
 export const pointTypeToOffers = POINT_TYPES.reduce((map, type) => {
   map[type] = [];
   return map;
-}, {})
+}, {});
 
 pointTypeToOffers['taxi'] = [
   ...Array.from({ length: 2 }, generateOffer),
@@ -138,48 +138,48 @@ pointTypeToOffers['taxi'] = [
 
 const offers = [
   {
-    type: "taxi",
+    type: 'taxi',
     offers: [
       {
-        "id": 1,
-        "title": "Upgrade to a business class",
-        "price": 120
+        'id': 1,
+        'title': 'Upgrade to a business class',
+        'price': 120
       }, {
-        "id": 2,
-        "title": "Choose the radio station",
-        "price": 60
+        'id': 2,
+        'title': 'Choose the radio station',
+        'price': 60
       }
     ]
   },
   {
-    type: "bus",
+    type: 'bus',
     offers: [
       {
-        "id": 3,
-        "title": "Upgrade to a business class",
-        "price": 100
+        'id': 3,
+        'title': 'Upgrade to a business class',
+        'price': 100
       }, {
-        "id": 4,
-        "title": "Choose the radio station",
-        "price": 10
+        'id': 4,
+        'title': 'Choose the radio station',
+        'price': 10
       }
     ]
   },
   {
-    type: "ship",
+    type: 'ship',
     offers: [
       {
-        "id": 5,
-        "title": "Add meal",
-        "price": 20
+        'id': 5,
+        'title': 'Add meal',
+        'price': 20
       }, {
-        "id": 6,
-        "title": "Choose seats",
-        "price": 15
+        'id': 6,
+        'title': 'Choose seats',
+        'price': 15
       }, {
-        "id": 7,
-        "title": "Upgrade to a business class",
-        "price": 100
+        'id': 7,
+        'title': 'Upgrade to a business class',
+        'price': 100
       }
     ]
   },
@@ -206,9 +206,9 @@ export const generatePoint = ({
     finishDate,
     offers: [
       {
-        "id": 1,
-        "title": "Upgrade to a business class",
-        "price": 120
+        'id': 1,
+        'title': 'Upgrade to a business class',
+        'price': 120
       },
     ],
   };

@@ -15,7 +15,7 @@ const createPointTemplate = (point) => {
            <span class="event__offer-title">${title}</span>
            &plus;&euro;&nbsp;
            <span class="event__offer-price">${price}</span>
-       </li>`
+       </li>`;
   };
 
   const offersTemplate = offers.map(createOfferTemplate).join('');
@@ -54,7 +54,7 @@ const createPointTemplate = (point) => {
       </button>
     </div>
   </li>`
-  )
+  );
 };
 
 export { createPointTemplate };

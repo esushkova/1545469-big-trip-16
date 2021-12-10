@@ -27,4 +27,4 @@ const createSortTemplate = () => (
           </form>`
 );
 
-export { createSortTemplate }
+export { createSortTemplate };

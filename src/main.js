@@ -1,32 +1,29 @@
 import { createMenuTemplate } from './view/menu-view.js';
 import { createFiltersTemplate } from './view/filters-view.js';
 import { createSortTemplate } from './view/sort-view.js';
-import { createPointTemplate } from './view/create-point.js';
-import { editPointTemplate } from './view/edit-point.js';
-import { createListPointsTemplate } from './view/list-item.js';
-
-const renderTemplate = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
-
-const RenderPosition = {
-  BEFOREBEGIN: 'beforebegin',
-  AFTERBEGIN: 'afterbegin',
-  BEFOREEND: 'beforeend',
-  AFTEREND: 'afterend',
-};
+import { createPointTemplate } from './view/point-view.js';
+import { createEditPointTemplate } from './view/edit-point-view.js';
+import { createPointListTemplate } from './view/list-view.js';
+import { renderTemplate, RenderPosition } from './utils.js';
+import { points, destinations, offers } from './mock/point.js';
 
 const menuContainer = document.querySelector('.trip-controls__navigation');
 const filtersContainer = document.querySelector('.trip-controls__filters');
 const contentContainer = document.querySelector('.trip-events');
 
-renderTemplate(menuContainer, createMenuTemplate(), RenderPosition.AFTERBEGIN)
-renderTemplate(filtersContainer, createFiltersTemplate(), RenderPosition.AFTERBEGIN)
-renderTemplate(contentContainer, createSortTemplate(), RenderPosition.AFTERBEGIN)
-renderTemplate(contentContainer, createListPointsTemplate(), RenderPosition.AFTEREND)
+renderTemplate(menuContainer, createMenuTemplate(), RenderPosition.AFTER_BEGIN);
+renderTemplate(filtersContainer, createFiltersTemplate(), RenderPosition.AFTER_BEGIN);
+renderTemplate(contentContainer, createSortTemplate(), RenderPosition.AFTER_BEGIN);
+renderTemplate(contentContainer, createPointListTemplate(), RenderPosition.BEFORE_END);
 
-const pointListItem = document.querySelector('.trip-events__item');
+const pointList = document.querySelector('.trip-events__list');
 
-renderTemplate(pointListItem, createPointTemplate(), RenderPosition.AFTERBEGIN);
+points.forEach((point) => {
+  renderTemplate(pointList, createPointTemplate(point), RenderPosition.BEFORE_END);
+});
 
-renderTemplate(pointListItem, editPointTemplate(), RenderPosition.BEFOREBEGIN)
+const point1 = points[0];
+
+const point1Offers = offers.find((offer) => offer.type === point1.type).offers || [];
+
+renderTemplate(pointList, createEditPointTemplate(point1, destinations, point1Offers), RenderPosition.AFTER_BEGIN);

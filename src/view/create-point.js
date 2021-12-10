@@ -1,4 +1,4 @@
-const createPointTemplate = () => (
+/*const createPointTemplate = () => (
   `<form class="event event--edit" action="#" method="post">
                 <header class="event__header">
                   <div class="event__type-wrapper">
@@ -162,3 +162,4 @@ const createPointTemplate = () => (
 );
 
 export { createPointTemplate }
+*/

@@ -1,38 +1,38 @@
 import dayjs from 'dayjs';
 
+const createOfferTemplate = ({ title, price }) => (
+  `<li class="event__offer">
+        <span class="event__offer-title">${title}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${price}</span>
+    </li>`
+);
+
 const createPointTemplate = (point) => {
   const { type, startDate, finishDate, isFavorite, offers, basePrice } = point;
 
   const startTime = dayjs(startDate);
   const endTime = dayjs(finishDate);
 
-  const favoriteClass = isFavorite
+   const favoriteClass = isFavorite
     ? 'event__favorite-btn--active'
     : '';
-
-  const createOfferTemplate = ({ title, price }) => {
-    return `<li class="event__offer">
-           <span class="event__offer-title">${title}</span>
-           &plus;&euro;&nbsp;
-           <span class="event__offer-price">${price}</span>
-       </li>`;
-  };
 
   const offersTemplate = offers.map(createOfferTemplate).join('');
 
   return (
     `<li class="trip-events__item">
     <div class="event">
-      <time class="event__date" datetime="${startTime.format('MMM-D')}">${startTime.format('MMM D')}</time>
+      <time class="event__date" datetime="${startTime.toISOString()}}">${startTime.format('MMM D')}</time>
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
       <h3 class="event__title">${type} Amsterdam</h3>
       <div class="event__schedule">
         <p class="event__time">
-          <time class="event__start-time" datetime="${startTime.format('HH:mm')}">${startTime.format('HH:mm')}</time>
+          <time class="event__start-time" datetime="${startTime.toISOString()}">${startTime.format('HH:mm')}</time>
           &mdash;
-          <time class="event__end-time" datetime="${endTime.format('HH:mm')}">${endTime.format('HH:mm')}</time>
+          <time class="event__end-time" datetime="${endTime.toISOString()}">${endTime.format('HH:mm')}</time>
         </p>
         <p class="event__duration">30M</p>
       </div>

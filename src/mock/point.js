@@ -1,16 +1,5 @@
 import { getRandomIntInclusive } from './random.js';
-
-const POINT_TYPES = [
-  'taxi',
-  'bus',
-  'train',
-  'ship',
-  'drive',
-  'flight',
-  'check-in',
-  'sightseeing',
-  'restaurant',
-];
+import { POINT_TYPES } from '../const.js';
 
 const POINT_CITIES = [
   'Amsterdam',
@@ -21,10 +10,8 @@ const POINT_CITIES = [
 
 const getRandomItemArray = (items) => POINT_TYPES[getRandomIntInclusive(0, items.length - 1)];
 
-//Случаный тип
 const getRandomType = () => getRandomItemArray(POINT_TYPES);
 
-//избранное или нет
 const getIsFavourite = () => Boolean(getRandomIntInclusive(0, 1));
 
 const generateDescription = () => {
@@ -60,6 +47,10 @@ const destinations = [
     pictures: [
       {
         src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+        description: '[photo description]'
+      },
+      {
+        src: 'http://picsum.photos/300/200?r=0.0762563005163318',
         description: '[photo description]'
       }
     ]
@@ -245,5 +236,4 @@ export {
   destinations,
   offers,
   POINT_CITIES,
-  POINT_TYPES,
 };

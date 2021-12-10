@@ -1,18 +1,9 @@
-import { POINT_TYPES } from '../mock/point.js';
+import { POINT_TYPES } from '../const.js';
 import dayjs from 'dayjs';
 
-const createEventType = POINT_TYPES
-  .map((item) => (
-    `<div class="event__type-item">
-          <input id="event-type-${item}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item}">
-          <label class="event__type-label  event__type-label--${item}" for="event-type-${item}-1">${item}</label>
-        </div>`
-  ))
-  .join('');
+const createOffersListTemplate = (allOffers) => (
 
-const createOffersListTemplate = (allOffers) => {
-
-  return `<section class="event__section  event__section--offers">
+  `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
       <div class="event__available-offers">
@@ -32,16 +23,29 @@ const createOffersListTemplate = (allOffers) => {
           </label>
         </div>`).join('')}
       </div>
-    </section>`;
-};
+    </section>`
+);
 
 const createDestinationListTemplate = (destinations) =>
   destinations.map(({ name }) => `<option value="${name}"></option>`).join('');
 
+
 const createEditPointTemplate = (point, destinations, typeOffers) => {
   const { type, startDate, finishDate, offers, destination, basePrice } = point;
 
-  // убрать в функцию
+  const checkPointType = (pointType) => type === pointType ? 'checked' : '';
+
+  const createEventType = (arrayPointTypes) => (
+    arrayPointTypes
+    .map((item) => (
+      `<div class="event__type-item">
+            <input id="event-type-${item}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item}" ${checkPointType(item)}>
+            <label class="event__type-label  event__type-label--${item}" for="event-type-${item}-1">${item}</label>
+          </div>`
+    ))
+    .join('')
+  );
+
   const allOffers = [];
   typeOffers.forEach((typeOffer) => {
     allOffers.push({
@@ -50,11 +54,17 @@ const createEditPointTemplate = (point, destinations, typeOffers) => {
     });
   });
 
-  // можно без переменной
   const offersTemplate = createOffersListTemplate(allOffers);
 
   const startTime = dayjs(startDate);
   const endTime = dayjs(finishDate);
+
+  const createDestinationPicturesTemplate = () =>
+  `<div class="event__photos-container">
+    <div class="event__photos-tape">
+      ${destination.pictures.map(({src, description}) =>`<img class="event__photo" src="${src}" alt="${description}">`).join('')}
+    </div>
+  </div>`;
 
   return `<li class="trip-events__item">
 <form class="event event--edit" action="#" method="post">
@@ -69,7 +79,7 @@ const createEditPointTemplate = (point, destinations, typeOffers) => {
       <div class="event__type-list">
         <fieldset class="event__type-group">
           <legend class="visually-hidden">Event type</legend>
-          ${createEventType}
+          ${createEventType(POINT_TYPES)}
         </fieldset>
       </div>
     </div>
@@ -118,7 +128,10 @@ const createEditPointTemplate = (point, destinations, typeOffers) => {
 
     <section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">Chamonix-Mont-Blanc (usually shortened to Chamonix) is a resort area near the junction of France, Switzerland and Italy. At the base of Mont Blanc, the highest summit in the Alps, it's renowned for its skiing.</p>
+      <p class="event__destination-description">${destination.description}</p>
+
+      ${destination.pictures.length > 0 ? createDestinationPicturesTemplate() : ''}
+
     </section>
   </section>
 </form>

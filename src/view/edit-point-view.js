@@ -35,12 +35,17 @@ const createEditPointTemplate = (point, destinations, typeOffers) => {
 
   const checkPointType = (pointType) => type === pointType ? 'checked' : '';
 
+  const createUpperCaseLetter = (item) => {
+    const UpperCaseItem = item[0].charAt(0).toUpperCase() + item.slice(1);
+    return UpperCaseItem
+  }
+
   const createEventType = (arrayPointTypes) => (
     arrayPointTypes
     .map((item) => (
       `<div class="event__type-item">
             <input id="event-type-${item}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item}" ${checkPointType(item)}>
-            <label class="event__type-label  event__type-label--${item}" for="event-type-${item}-1">${item}</label>
+            <label class="event__type-label  event__type-label--${item}" for="event-type-${item}-1">${createUpperCaseLetter(item)}</label>
           </div>`
     ))
     .join('')

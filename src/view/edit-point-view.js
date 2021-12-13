@@ -1,5 +1,6 @@
 import { POINT_TYPES } from '../const.js';
 import dayjs from 'dayjs';
+import {createElement} from '../utils.js';
 
 const createOffersListTemplate = (allOffers) => (
 
@@ -144,3 +145,32 @@ const createEditPointTemplate = (point, destinations, typeOffers) => {
 };
 
 export { createEditPointTemplate };
+
+/*
+export default class EditPointView {
+  #element = null;
+  #point = null;
+  #destinations = null;
+  #typeOffers = null;
+
+  constructor(point) {
+    this.#point = point;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createEditPointTemplate(this.#point, this.#destinations, this.#typeOffers);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
+*/

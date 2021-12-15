@@ -5,12 +5,7 @@ const RenderPosition = {
   AFTER_END: 'afterend',
 };
 
-
-const renderTemplate = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
-
-export const renderElement = (container, element, place) => {
+export const render = (container, element, place) => {
   switch (place) {
     case RenderPosition.BEFORE_BEGIN:
       container.before(element);
@@ -34,10 +29,4 @@ export const createElement = (template) => {
   return newElement.firstChild;
 };
 
-
-
-
-
-
-
-export {RenderPosition, renderTemplate}
+export {RenderPosition}

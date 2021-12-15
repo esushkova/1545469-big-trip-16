@@ -1,6 +1,7 @@
 import { POINT_TYPES } from '../const.js';
 import dayjs from 'dayjs';
-import {createElement} from '../utils.js';
+import { createElement } from '../utils.js';
+import { offers } from '../mock/point.js';
 
 const createOffersListTemplate = (allOffers) => (
 
@@ -30,9 +31,15 @@ const createOffersListTemplate = (allOffers) => (
 const createDestinationListTemplate = (destinations) =>
   destinations.map(({ name }) => `<option value="${name}"></option>`).join('');
 
-
 const createEditPointTemplate = (point, destinations, typeOffers) => {
-  const { type, startDate, finishDate, offers, destination, basePrice } = point;
+  const {
+    type,
+    startDate,
+    finishDate,
+    offers,
+    destination,
+    basePrice
+  } = point;
 
   const checkPointType = (pointType) => type === pointType ? 'checked' : '';
 
@@ -43,13 +50,13 @@ const createEditPointTemplate = (point, destinations, typeOffers) => {
 
   const createEventType = (arrayPointTypes) => (
     arrayPointTypes
-    .map((item) => (
-      `<div class="event__type-item">
+      .map((item) => (
+        `<div class="event__type-item">
             <input id="event-type-${item}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item}" ${checkPointType(item)}>
             <label class="event__type-label  event__type-label--${item}" for="event-type-${item}-1">${createUpperCaseLetter(item)}</label>
           </div>`
-    ))
-    .join('')
+      ))
+      .join('')
   );
 
   const allOffers = [];
@@ -66,9 +73,9 @@ const createEditPointTemplate = (point, destinations, typeOffers) => {
   const endTime = dayjs(finishDate);
 
   const createDestinationPicturesTemplate = () =>
-  `<div class="event__photos-container">
+    `<div class="event__photos-container">
     <div class="event__photos-tape">
-      ${destination.pictures.map(({src, description}) =>`<img class="event__photo" src="${src}" alt="${description}">`).join('')}
+      ${destination.pictures.map(({ src, description }) => `<img class="event__photo" src="${src}" alt="${description}">`).join('')}
     </div>
   </div>`;
 
@@ -144,17 +151,16 @@ const createEditPointTemplate = (point, destinations, typeOffers) => {
 </li>`;
 };
 
-export { createEditPointTemplate };
-
-/*
 export default class EditPointView {
   #element = null;
-  #point = null;
+  #point;
   #destinations = null;
-  #typeOffers = null;
+  //#offers = offers;
 
-  constructor(point) {
+  constructor(point, destinations, offers = offers) {
     this.#point = point;
+    this.#destinations = destinations;
+    //this.#offers = offers;
   }
 
   get element() {
@@ -166,11 +172,12 @@ export default class EditPointView {
   }
 
   get template() {
-    return createEditPointTemplate(this.#point, this.#destinations, this.#typeOffers);
+    //const typeOffers = this.#offers.find((offer) => offer.type === type).offers || [];
+    return createEditPointTemplate(this.#point, this.#destinations, typeOffers);
   }
 
   removeElement() {
     this.#element = null;
   }
 }
-*/
+

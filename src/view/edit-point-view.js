@@ -6,7 +6,6 @@ const createOffersListTemplate = (allOffers) => (
 
   `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
       <div class="event__available-offers">
       ${allOffers.map(({ id, title, price, isChecked = false }) =>
     `<div class="event__offer-selector">
@@ -61,8 +60,8 @@ const createTypeItemTemplate = (type, pointType) => (
       </div>`
 );
 
-const createEventTypeTemplate = (arrayPointTypes, pointType) => (
-  arrayPointTypes
+const createEventTypeTemplate = (pointTypes, pointType) => (
+  pointTypes
     .map((type) => createTypeItemTemplate(type, pointType))
     .join('')
 );
@@ -74,17 +73,23 @@ const createDestinationPicturesTemplate = (destination) =>
     </div>
   </div>`;
 
+  const createDestinationTemplate = (destination) =>
+    `<section class="event__section  event__section--destination">
+    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+    <p class="event__destination-description">${destination.description}</p>
+
+    ${destination.pictures.length > 0 ? createDestinationPicturesTemplate(destination) : ''}
+
+    </section>`;
+
 const createEditPointTemplate = (point, destinations, renderedOffers) => {
   const {
     type,
     startDate,
     finishDate,
-    offers,
     destination,
     basePrice
   } = point;
-
-  const offersTemplate = createOffersListTemplate(renderedOffers);
 
   const startTime = dayjs(startDate);
   const endTime = dayjs(finishDate);
@@ -148,15 +153,11 @@ const createEditPointTemplate = (point, destinations, renderedOffers) => {
   </header>
   <section class="event__details">
 
-  ${offersTemplate}
+  ${renderedOffers.length === 0 ? '' : createOffersListTemplate(renderedOffers)}
 
-    <section class="event__section  event__section--destination">
-      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${destination.description}</p>
+  ${destination.description.length === 0 || destination.pictures.length === 0 ? '' : createDestinationTemplate(destination)}
 
-      ${destination.pictures.length > 0 ? createDestinationPicturesTemplate(destination) : ''}
 
-    </section>
   </section>
 </form>
 </li>`;

@@ -1,4 +1,4 @@
-const RenderPosition = {
+export const RenderPosition = {
   BEFORE_BEGIN: 'beforebegin',
   AFTER_BEGIN: 'afterbegin',
   BEFORE_END: 'beforeend',
@@ -23,13 +23,14 @@ export const render = (container, element, place) => {
 };
 
 export const createElement = (template) => {
-  const newElement = document.createElement('div');
-  newElement.innerHTML = template;
+  const wrap = document.createElement('div');
+  wrap.innerHTML = template;
 
-  return newElement.firstChild;
+  return wrap.firstElementChild;
 };
 
 export const capitalizeFirstLetter = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
+const ESCAPE_KEYS = ['Escape', 'Esc'];
 
-export { RenderPosition };
+export const isEscapeEvent = (evt) => ESCAPE_KEYS.includes(evt.key);

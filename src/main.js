@@ -3,9 +3,9 @@ import FiltersView from './view/filters-view.js';
 import SortView from './view/sort-view.js';
 import PointView from './view/point-view.js';
 import EditPointView from './view/edit-point-view.js';
-import PointListView from './view/list-view.js';
+import PointListView from './view/point-list-view.js';
 import NoPointView from './view/no-point-view.js';
-import { render, RenderPosition } from './utils.js';
+import { render, RenderPosition, isEscapeEvent } from './utils.js';
 import { points, destinations, offers } from './mock/point.js';
 
 const menuContainer = document.querySelector('.trip-controls__navigation');
@@ -32,7 +32,7 @@ const renderPoint = (container, point) => {
   };
 
   const onEscKeyDown = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (isEscapeEvent(evt)) {
       evt.preventDefault();
       replaceFormToPoint();
       document.removeEventListener('keydown', onEscKeyDown);
@@ -52,6 +52,7 @@ const renderPoint = (container, point) => {
 
   pointEditView.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
     replaceFormToPoint();
+    document.addEventListener('keydown', onEscKeyDown);
   });
 
   render(container, pointView.element, RenderPosition.BEFORE_END);

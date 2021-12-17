@@ -11,45 +11,37 @@ const menuContainer = document.querySelector('.trip-controls__navigation');
 const filtersContainer = document.querySelector('.trip-controls__filters');
 const contentContainer = document.querySelector('.trip-events');
 
+const pointListView = new PointListView();
+
 render(menuContainer, new MenuView().element, RenderPosition.AFTER_BEGIN);
 render(filtersContainer, new FiltersView().element, RenderPosition.AFTER_BEGIN);
 render(contentContainer, new SortView().element, RenderPosition.AFTER_BEGIN);
-render(contentContainer, new PointListView().element, RenderPosition.BEFORE_END);
+render(contentContainer, pointListView.element, RenderPosition.BEFORE_END);
 
+const renderPoint = (container, point) => {
+  const pointView = new PointView(point);
+  const pointEditView = new EditPointView(point, destinations, offers);
 
-const pointList = document.querySelector('.trip-events__list');
-
-const point1 = points[0];
-
-const point1Offers = offers.find((offer) => offer.type === point1.type).offers || [];
-
-
-render(pointList, new EditPointView(point1, destinations, point1Offers).element, RenderPosition.AFTER_BEGIN);
-
-
-
-const renderPoint = (pointListElement, point) => {
-  const pointComponent = new PointView(point);
- // const pointEditComponent = new EditPointView(point1, destinations, point1Offers);
-
-  render(pointListElement, pointComponent.element, RenderPosition.BEFORE_END)
-
-  //render(pointListElement, pointEditComponent.element, RenderPosition.AFTER_BEGIN)
-
-  /*
   const replacePointToForm = () => {
-    pointListElement.replaceChild(pointEditComponent.element, pointComponent.element);
+    pointListView.element.replaceChild(pointEditView.element, pointView.element);
   }
 
   const replaceFormToPoint = () => {
-    pointListElement.replaceChild(pointComponent.element, pointEditComponent.element);
+    pointListView.element.replaceChild(pointView.element, pointEditView.element);
   }
-*/
-};
 
-  points.forEach((point) => {
-    renderPoint(pointList, point)
+  pointView.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+    replacePointToForm();
   });
 
+  pointEditView.element.querySelector('form').addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    replaceFormToPoint();
+  });
 
+  render(container, pointView.element, RenderPosition.BEFORE_END)
+};
 
+points.forEach((point) => {
+  renderPoint(pointListView.element, point)
+});

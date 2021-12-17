@@ -2,7 +2,7 @@ import {createElement} from '../utils.js';
 
 const createPointListTemplate = () => (
   '<ul class="trip-events__list"></ul>'
-  );
+);
 
 export default class PointListView {
   #element = null;

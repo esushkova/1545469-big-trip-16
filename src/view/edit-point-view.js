@@ -43,7 +43,8 @@ const getRenderedOffers = (point, allOffers) => {
   });
 
   return offers;
-}
+};
+
 const createTypeItemTemplate = (type, pointType) => (
   `<div class="event__type-item">
         <input
@@ -58,7 +59,7 @@ const createTypeItemTemplate = (type, pointType) => (
           ${capitalizeFirstLetter(type)}
         </label>
       </div>`
-)
+);
 
 const createEventTypeTemplate = (arrayPointTypes, pointType) => (
   arrayPointTypes

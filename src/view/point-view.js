@@ -15,7 +15,7 @@ const createPointTemplate = (point) => {
   const startTime = dayjs(startDate);
   const endTime = dayjs(finishDate);
 
-   const favoriteClass = isFavorite
+  const favoriteClass = isFavorite
     ? 'event__favorite-btn--active'
     : '';
 

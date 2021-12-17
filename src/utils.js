@@ -32,4 +32,4 @@ export const createElement = (template) => {
 export const capitalizeFirstLetter = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
 
-export { RenderPosition }
+export { RenderPosition };

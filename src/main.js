@@ -24,11 +24,11 @@ const renderPoint = (container, point) => {
 
   const replacePointToForm = () => {
     pointListView.element.replaceChild(pointEditView.element, pointView.element);
-  }
+  };
 
   const replaceFormToPoint = () => {
     pointListView.element.replaceChild(pointView.element, pointEditView.element);
-  }
+  };
 
   pointView.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
     replacePointToForm();
@@ -39,9 +39,9 @@ const renderPoint = (container, point) => {
     replaceFormToPoint();
   });
 
-  render(container, pointView.element, RenderPosition.BEFORE_END)
+  render(container, pointView.element, RenderPosition.BEFORE_END);
 };
 
 points.forEach((point) => {
-  renderPoint(pointListView.element, point)
+  renderPoint(pointListView.element, point);
 });

@@ -155,7 +155,7 @@ const createEditPointTemplate = (point, destinations, renderedOffers) => {
 
   ${renderedOffers.length === 0 ? '' : createOffersListTemplate(renderedOffers)}
 
-  ${destination.description.length === 0 || destination.pictures.length === 0 ? '' : createDestinationTemplate(destination)}
+  ${destination.description.length === 0 && destination.pictures.length === 0 ? '' : createDestinationTemplate(destination)}
 
 
   </section>

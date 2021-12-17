@@ -1,29 +1,71 @@
-import { createMenuTemplate } from './view/menu-view.js';
-import { createFiltersTemplate } from './view/filters-view.js';
-import { createSortTemplate } from './view/sort-view.js';
-import { createPointTemplate } from './view/point-view.js';
-import { createEditPointTemplate } from './view/edit-point-view.js';
-import { createPointListTemplate } from './view/list-view.js';
-import { renderTemplate, RenderPosition } from './utils.js';
+import MenuView from './view/menu-view.js';
+import FiltersView from './view/filters-view.js';
+import SortView from './view/sort-view.js';
+import PointView from './view/point-view.js';
+import EditPointView from './view/edit-point-view.js';
+import PointListView from './view/point-list-view.js';
+import NoPointView from './view/no-point-view.js';
+import { render, RenderPosition, isEscapeEvent } from './utils.js';
 import { points, destinations, offers } from './mock/point.js';
 
 const menuContainer = document.querySelector('.trip-controls__navigation');
 const filtersContainer = document.querySelector('.trip-controls__filters');
 const contentContainer = document.querySelector('.trip-events');
 
-renderTemplate(menuContainer, createMenuTemplate(), RenderPosition.AFTER_BEGIN);
-renderTemplate(filtersContainer, createFiltersTemplate(), RenderPosition.AFTER_BEGIN);
-renderTemplate(contentContainer, createSortTemplate(), RenderPosition.AFTER_BEGIN);
-renderTemplate(contentContainer, createPointListTemplate(), RenderPosition.BEFORE_END);
+const pointListView = new PointListView();
 
-const pointList = document.querySelector('.trip-events__list');
+render(menuContainer, new MenuView().element, RenderPosition.AFTER_BEGIN);
+render(filtersContainer, new FiltersView().element, RenderPosition.AFTER_BEGIN);
+render(contentContainer, new SortView().element, RenderPosition.AFTER_BEGIN);
+render(contentContainer, pointListView.element, RenderPosition.BEFORE_END);
 
-points.forEach((point) => {
-  renderTemplate(pointList, createPointTemplate(point), RenderPosition.BEFORE_END);
-});
+const renderPoint = (container, point) => {
+  const pointView = new PointView(point);
+  const pointEditView = new EditPointView(point, destinations, offers);
 
-const point1 = points[0];
+  const replacePointToForm = () => {
+    pointListView.element.replaceChild(pointEditView.element, pointView.element);
+  };
 
-const point1Offers = offers.find((offer) => offer.type === point1.type).offers || [];
+  const replaceFormToPoint = () => {
+    pointListView.element.replaceChild(pointView.element, pointEditView.element);
+  };
 
-renderTemplate(pointList, createEditPointTemplate(point1, destinations, point1Offers), RenderPosition.AFTER_BEGIN);
+  const onEscKeyDown = (evt) => {
+    if (isEscapeEvent(evt)) {
+      evt.preventDefault();
+      replaceFormToPoint();
+      document.removeEventListener('keydown', onEscKeyDown);
+    }
+  };
+
+  pointView.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+    replacePointToForm();
+    document.addEventListener('keydown', onEscKeyDown);
+  });
+
+  pointEditView.element.querySelector('form').addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    replaceFormToPoint();
+    document.addEventListener('keydown', onEscKeyDown);
+  });
+
+  pointEditView.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+    replaceFormToPoint();
+    document.addEventListener('keydown', onEscKeyDown);
+  });
+
+  render(container, pointView.element, RenderPosition.BEFORE_END);
+};
+
+const renderPointCheck = (points) => {
+  if (points.length === 0) {
+    render(pointListView.element, new NoPointView().element, RenderPosition.BEFORE_END);
+  } else {
+    points.forEach((point) => {
+      renderPoint(pointListView.element, point);
+    });
+    }
+}
+
+renderPointCheck(points)

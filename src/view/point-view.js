@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import {createElement} from '../utils.js';
 
 const createOfferTemplate = ({ title, price }) => (
   `<li class="event__offer">
@@ -14,7 +15,7 @@ const createPointTemplate = (point) => {
   const startTime = dayjs(startDate);
   const endTime = dayjs(finishDate);
 
-   const favoriteClass = isFavorite
+  const favoriteClass = isFavorite
     ? 'event__favorite-btn--active'
     : '';
 
@@ -57,4 +58,28 @@ const createPointTemplate = (point) => {
   );
 };
 
-export { createPointTemplate };
+export default class PointView {
+  #element = null;
+  #point = null;
+
+  constructor(point) {
+    this.#point = point;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createPointTemplate(this.#point);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
+

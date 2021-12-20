@@ -1,6 +1,7 @@
 import { POINT_TYPES } from '../const.js';
 import dayjs from 'dayjs';
-import { createElement, capitalizeFirstLetter } from '../utils.js';
+import { capitalizeFirstLetter } from '../utils/common.js';
+import AbstractView from './abstract-view.js';
 
 const createOffersListTemplate = (allOffers) => (
 
@@ -73,8 +74,8 @@ const createDestinationPicturesTemplate = (destination) =>
     </div>
   </div>`;
 
-  const createDestinationTemplate = (destination) =>
-    `<section class="event__section  event__section--destination">
+const createDestinationTemplate = (destination) =>
+  `<section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
     <p class="event__destination-description">${destination.description}</p>
 
@@ -163,25 +164,16 @@ const createEditPointTemplate = (point, destinations, renderedOffers) => {
 </li>`;
 };
 
-export default class EditPointView {
-  #element = null;
-
+export default class EditPointView extends AbstractView {
   #point = null;
   #destinations = [];
   #offers = [];
 
   constructor(point, destinations, offers) {
+    super();
     this.#point = point;
     this.#destinations = destinations;
     this.#offers = offers;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
@@ -189,7 +181,23 @@ export default class EditPointView {
     return createEditPointTemplate(this.#point, this.#destinations, renderedOffers);
   }
 
-  removeElement() {
-    this.#element = null;
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  }
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  }
+
+  setEditClicButtonkHandler = (callback) => {
+    this._callback.editClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickButtonHandler);
+  }
+
+  #editClickButtonHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.editClick();
   }
 }

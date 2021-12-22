@@ -1,4 +1,4 @@
-import { createElement } from '../utils/rendered.js';
+import { createElement } from '../utils/render.js';
 
 export default class AbstractView {
   #element = null;
@@ -11,7 +11,7 @@ export default class AbstractView {
   }
 
   get element() {
-    if (!this.#element) {
+    if (this.#element === null) {
       this.#element = createElement(this.template);
     }
 

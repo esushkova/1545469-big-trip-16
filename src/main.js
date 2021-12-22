@@ -5,7 +5,8 @@ import PointView from './view/point-view.js';
 import EditPointView from './view/edit-point-view.js';
 import PointListView from './view/point-list-view.js';
 import NoPointView from './view/no-point-view.js';
-import { render, RenderPosition, isEscapeEvent } from './utils.js';
+import { render, RenderPosition, replace } from './utils/render.js';
+import { isEscapeEvent } from './utils/common.js';
 import { points, destinations, offers } from './mock/point.js';
 
 const menuContainer = document.querySelector('.trip-controls__navigation');
@@ -14,21 +15,21 @@ const contentContainer = document.querySelector('.trip-events');
 
 const pointListView = new PointListView();
 
-render(menuContainer, new MenuView().element, RenderPosition.AFTER_BEGIN);
-render(filtersContainer, new FiltersView().element, RenderPosition.AFTER_BEGIN);
-render(contentContainer, new SortView().element, RenderPosition.AFTER_BEGIN);
-render(contentContainer, pointListView.element, RenderPosition.BEFORE_END);
+render(menuContainer, new MenuView(), RenderPosition.AFTER_BEGIN);
+render(filtersContainer, new FiltersView(), RenderPosition.AFTER_BEGIN);
+render(contentContainer, new SortView(), RenderPosition.AFTER_BEGIN);
+render(contentContainer, pointListView, RenderPosition.BEFORE_END);
 
 const renderPoint = (container, point) => {
   const pointView = new PointView(point);
   const pointEditView = new EditPointView(point, destinations, offers);
 
   const replacePointToForm = () => {
-    pointListView.element.replaceChild(pointEditView.element, pointView.element);
+    replace(pointEditView, pointView);
   };
 
   const replaceFormToPoint = () => {
-    pointListView.element.replaceChild(pointView.element, pointEditView.element);
+    replace(pointView, pointEditView);
   };
 
   const onEscKeyDown = (evt) => {
@@ -39,33 +40,32 @@ const renderPoint = (container, point) => {
     }
   };
 
-  pointView.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+  pointView.setEditClick(() => {
     replacePointToForm();
     document.addEventListener('keydown', onEscKeyDown);
   });
 
-  pointEditView.element.querySelector('form').addEventListener('submit', (evt) => {
-    evt.preventDefault();
+  pointEditView.setFormSubmit(() => {
     replaceFormToPoint();
     document.addEventListener('keydown', onEscKeyDown);
   });
 
-  pointEditView.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+  pointEditView.setEditClicButton(() => {
     replaceFormToPoint();
     document.addEventListener('keydown', onEscKeyDown);
   });
 
-  render(container, pointView.element, RenderPosition.BEFORE_END);
+  render(container, pointView, RenderPosition.BEFORE_END);
 };
 
-const renderPointCheck = (points) => {
-  if (points.length === 0) {
-    render(pointListView.element, new NoPointView().element, RenderPosition.BEFORE_END);
+const renderPointCheck = (somePoints) => {
+  if (somePoints.length === 0) {
+    render(pointListView, new NoPointView(), RenderPosition.BEFORE_END);
   } else {
-    points.forEach((point) => {
-      renderPoint(pointListView.element, point);
+    somePoints.forEach((point) => {
+      renderPoint(pointListView, point);
     });
-    }
-}
+  }
+};
 
-renderPointCheck(points)
+renderPointCheck(points);

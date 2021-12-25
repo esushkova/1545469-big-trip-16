@@ -3,7 +3,7 @@
 //import SortView from './view/sort-view.js';
 //import PointView from './view/point-view.js';
 //import EditPointView from './view/edit-point-view.js';
-import PointListView from './view/point-list-view.js';
+//import PointListView from './view/point-list-view.js';
 //import NoPointView from './view/no-point-view.js';
 //import { render, RenderPosition, replace } from './utils/render.js';
 //import { isEscapeEvent } from './utils/common.js';

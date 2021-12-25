@@ -1,7 +1,7 @@
 import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
 import { render, RenderPosition, replace } from '../utils/render.js';
-import { isEscapeEvent } from './utils/common.js';
+import { isEscapeEvent } from '../utils/common.js';
 
 export default class PointPresenter {
   #pointListContainer = null;

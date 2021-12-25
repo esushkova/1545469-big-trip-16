@@ -7,16 +7,16 @@ import PointListView from './view/point-list-view.js';
 //import NoPointView from './view/no-point-view.js';
 //import { render, RenderPosition, replace } from './utils/render.js';
 //import { isEscapeEvent } from './utils/common.js';
-import { points, destinations, offers } from './mock/point.js';
+import { points } from './mock/point.js';
 import { TripPresenter } from './presenter/trip-presenter.js';
-const tripContainer = document.querySelector('.page-body__page-main').querySelector('.page-body__container');
+//const tripContainer = document.querySelector('.page-body__page-main').querySelector('.page-body__container');
 
 
-const menuContainer = document.querySelector('.trip-controls__navigation');
-const filtersContainer = document.querySelector('.trip-controls__filters');
+//const menuContainer = document.querySelector('.trip-controls__navigation');
+//const filtersContainer = document.querySelector('.trip-controls__filters');
 const contentContainer = document.querySelector('.trip-events');
 
-const pointListView = new PointListView();
+//const pointListView = new PointListView();
 
 //render(menuContainer, new MenuView(), RenderPosition.AFTER_BEGIN);
 //render(filtersContainer, new FiltersView(), RenderPosition.AFTER_BEGIN);

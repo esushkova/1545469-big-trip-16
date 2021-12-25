@@ -3,14 +3,11 @@ import FiltersView from '../view/filters-view.js';
 import SortView from '../view/sort-view.js';
 import PointListView from '../view/point-list-view.js';
 import NoPointView from '../view/no-point-view.js';
-import PointView from '../view/point-view.js';
-import EditPointView from '../view/edit-point-view.js';
-import { render, RenderPosition, replace } from '../utils/render.js';
-import { destinations, offers, points } from '../mock/point.js';
+import { render, RenderPosition } from '../utils/render.js';
 import { PointPresenter } from './point-presenter.js';
 
 
-const tripInfoContainer = document.querySelector('.trip-main');
+//const tripInfoContainer = document.querySelector('.trip-main');
 const menuContainer = document.querySelector('.trip-controls__navigation');
 const filtersContainer = document.querySelector('.trip-controls__filters');
 
@@ -88,8 +85,8 @@ export default class TripPresenter {
       this.#renderNoPoints();
     }
 
-    this.#renderPointList()
+    this.#renderPointList();
   };
 }
 
-export {TripPresenter}
+export {TripPresenter};

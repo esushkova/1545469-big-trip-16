@@ -70,12 +70,12 @@ export default class PointView extends AbstractView {
     return createPointTemplate(this.#point);
   }
 
-  setEditClick = (callback) => {
+  setRollupButtonClickHandler = (callback) => {
     this._callback.openForm = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onRollupButtonEdit);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onRollupButtonClickEdit);
   }
 
-  #onRollupButtonEdit = (evt) => {
+  #onRollupButtonClickEdit = (evt) => {
     evt.preventDefault();
     this._callback.openForm();
   }

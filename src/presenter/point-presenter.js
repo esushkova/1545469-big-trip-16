@@ -1,6 +1,7 @@
 import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
 import { render, RenderPosition, replace } from '../utils/render.js';
+import { isEscapeEvent } from './utils/common.js';
 
 export default class PointPresenter {
   #pointListContainer = null;
@@ -13,7 +14,7 @@ export default class PointPresenter {
   #offers = [];
 
   constructor(pointListContainer) {
-    this.#pointListContainer = pointListContainer
+    this.#pointListContainer = pointListContainer;
   }
 
   init = (point, destinations, offers) => {
@@ -44,9 +45,6 @@ export default class PointPresenter {
       document.removeEventListener('keydown', this.#onEscKeyDown);
     }
   };
-
-
-
 }
 
-export {PointPresenter}
+export {PointPresenter};

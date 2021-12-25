@@ -6,7 +6,7 @@ import NoPointView from '../view/no-point-view.js';
 import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
 import { render, RenderPosition, replace } from '../utils/render.js';
-import { points } from '../mock/point.js';
+import { destinations, offers, points } from '../mock/point.js';
 import { PointPresenter } from './point-presenter.js';
 
 
@@ -25,6 +25,8 @@ export default class TripPresenter {
   #noPointComponent = new NoPointView();
 
   #points = [];
+  #point = null;
+
 
   constructor(tripContainer) {
     this.#tripContainer = tripContainer;
@@ -46,21 +48,24 @@ export default class TripPresenter {
   }
 
   #renderSort = () => {
-    render(this.#tripContainer, this.#sortComponent, RenderPosition.BEFORE_END);
+    render(this.#tripContainer, this.#sortComponent, RenderPosition.AFTER_BEGIN);
   }
 
-  #rendePointList = () => {
-    //код для отрисовки всех точек
-      points.forEach((point) => {
-        this.#renderPoint(this.#pointListComponent, point);
-      });
-  }
+  #renderPointList = () => {
+    render(this.#tripContainer, this.#pointListComponent, RenderPosition.BEFORE_END);
+    this.#renderPoints(0, this.#points.length);
+  };
 
   #renderPoint = (point) => {
-
     const pointPresenter = new PointPresenter(this.#pointListComponent);
     pointPresenter.init(point);
   }
+
+  #renderPoints = (from, to) => {
+    for (let i = 0; i < to; i++) {
+      this.#renderPoint(this.#points[i]);
+    }
+  };
 
   #renderNoPoints = () => {
     render(this.#pointListComponent, this.#noPointComponent, RenderPosition.BEFORE_END);
@@ -83,7 +88,7 @@ export default class TripPresenter {
       this.#renderNoPoints();
     }
 
-    this.#rendePointList();
+    this.#renderPointList()
   };
 }
 

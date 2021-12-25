@@ -1,6 +1,6 @@
 import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
-import { render, RenderPosition, replace, remove } from '../utils/render.js';
+import { render, RenderPosition, replace } from '../utils/render.js';
 
 export default class PointPresenter {
   #pointListContainer = null;
@@ -24,10 +24,6 @@ export default class PointPresenter {
     this.#pointComponent = new PointView(point);
     this.#editPointComponent = new EditPointView(point, destinations, offers);
 
-    this.#pointComponent.setEditClick(this.#setEditClick);
-    this.#editPointComponent.setFormSubmit(this.#setFormSubmit);
-    this.#editPointComponent.setEditClicButton(this.#setEditClicButton);
-
     render(this.#pointListContainer, this.#pointComponent, RenderPosition.BEFORE_END);
   }
 
@@ -49,17 +45,7 @@ export default class PointPresenter {
     }
   };
 
-  #setEditClick = () => {
-    this.#replacePointToForm();
-  }
 
-  #setFormSubmit = () => {
-    this.#replaceFormToPoint();
-  }
-
-  #setEditClicButton = () => {
-    this.#replaceFormToPoint();
-  }
 
 }
 

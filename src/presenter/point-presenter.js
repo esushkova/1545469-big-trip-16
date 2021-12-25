@@ -25,6 +25,10 @@ export default class PointPresenter {
     this.#pointComponent = new PointView(point);
     this.#editPointComponent = new EditPointView(point, destinations, offers);
 
+    this.#pointComponent.setRollupButtonClickHandler(this.#handleEditClick);
+    this.#editPointComponent.setSaveHandler(this.#handleFormSubmit);
+
+
     render(this.#pointListContainer, this.#pointComponent, RenderPosition.BEFORE_END);
   }
 
@@ -42,9 +46,17 @@ export default class PointPresenter {
     if (isEscapeEvent(evt)) {
       evt.preventDefault();
       this.#replaceFormToPoint();
-      document.removeEventListener('keydown', this.#onEscKeyDown);
+      //document.removeEventListener('keydown', this.#onEscKeyDown);
     }
   };
+
+  #handleEditClick = () => {
+    this.#replacePointToForm();
+  };
+
+  #handleFormSubmit = () => {
+    this.#replaceFormToPoint();
+  }
 }
 
 export {PointPresenter};

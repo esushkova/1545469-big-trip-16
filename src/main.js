@@ -7,7 +7,7 @@
 //import NoPointView from './view/no-point-view.js';
 //import { render, RenderPosition, replace } from './utils/render.js';
 //import { isEscapeEvent } from './utils/common.js';
-import { points } from './mock/point.js';
+import { points, destinations, offers } from './mock/point.js';
 import { TripPresenter } from './presenter/trip-presenter.js';
 //const tripContainer = document.querySelector('.page-body__page-main').querySelector('.page-body__container');
 
@@ -78,4 +78,4 @@ renderPointCheck(points);
 */
 
 const tripPresenter = new TripPresenter(contentContainer);
-tripPresenter.init(points);
+tripPresenter.init(points, destinations, offers);

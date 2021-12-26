@@ -22,15 +22,17 @@ export default class TripPresenter {
   #noPointComponent = new NoPointView();
 
   #points = [];
-  #point = null;
-
+  #destinations = [];
+  #offers = [];
 
   constructor(tripContainer) {
     this.#tripContainer = tripContainer;
   }
 
-  init = (points) => {
+  init = (points, destinations, offers) => {
     this.#points = [...points];
+    this.#destinations = destinations;
+  this.#offers = offers;
     render(this.#tripContainer, this.#pointListComponent, RenderPosition.BEFORE_END);
 
     this.#renderTrip();
@@ -55,7 +57,7 @@ export default class TripPresenter {
 
   #renderPoint = (point) => {
     const pointPresenter = new PointPresenter(this.#pointListComponent);
-    pointPresenter.init(point);
+    pointPresenter.init(point, this.#destinations, this.#offers);
   }
 
   #renderPoints = (from, to) => {

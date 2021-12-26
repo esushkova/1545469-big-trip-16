@@ -5,6 +5,7 @@ import PointListView from '../view/point-list-view.js';
 import NoPointView from '../view/no-point-view.js';
 import { render, RenderPosition } from '../utils/render.js';
 import { PointPresenter } from './point-presenter.js';
+import {updateItem} from '../utils/common.js';
 
 
 //const tripInfoContainer = document.querySelector('.trip-main');
@@ -13,7 +14,6 @@ const filtersContainer = document.querySelector('.trip-controls__filters');
 
 export default class TripPresenter {
   #tripContainer = null;
-
 
   #menuComponent = new MenuView();
   #filtersComponent = new FiltersView();
@@ -24,6 +24,9 @@ export default class TripPresenter {
   #points = [];
   #destinations = [];
   #offers = [];
+
+  #pointPresenter = new Map();
+
 
   constructor(tripContainer) {
     this.#tripContainer = tripContainer;
@@ -36,6 +39,16 @@ export default class TripPresenter {
     render(this.#tripContainer, this.#pointListComponent, RenderPosition.BEFORE_END);
 
     this.#renderTrip();
+  }
+
+  #handlePointChange = (updatedPoint) => {
+    this.#points = updateItem(this.#points, updatedPoint);
+    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+  }
+
+
+  #handleModeChange = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.resetView());
   }
 
   #renderMenu = () => {
@@ -56,8 +69,14 @@ export default class TripPresenter {
   };
 
   #renderPoint = (point) => {
-    const pointPresenter = new PointPresenter(this.#pointListComponent);
+    const pointPresenter = new PointPresenter(this.#pointListComponent, this.#handlePointChange, this.#handleModeChange);
     pointPresenter.init(point, this.#destinations, this.#offers);
+    this.#pointPresenter.set(point.id, pointPresenter);
+  }
+
+  #clearPointList = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.destroy());
+    this.#pointPresenter.clear();
   }
 
   #renderPoints = (from, to) => {

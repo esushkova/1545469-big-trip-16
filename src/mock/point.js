@@ -1,3 +1,4 @@
+import {nanoid} from 'nanoid';
 import { getRandomIntInclusive } from './random.js';
 import { POINT_TYPES } from '../const.js';
 
@@ -188,7 +189,7 @@ export const generatePoint = ({
 } = {}) => {
 
   return {
-    id,
+    id: nanoid(),
     type,
     destination,
     isFavorite,

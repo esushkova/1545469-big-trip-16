@@ -75,9 +75,19 @@ export default class PointView extends AbstractView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onRollupButtonClickEdit);
   }
 
+  setOnFavoriteClick = (callback) => {
+    this._callback.favoriteClick = callback;
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#onFavoriteClick);
+  }
+
   #onRollupButtonClickEdit = (evt) => {
     evt.preventDefault();
     this._callback.openForm();
   }
+
+  #onFavoriteClick = (evt) => {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  };
 }
 

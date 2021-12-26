@@ -193,7 +193,7 @@ export default class EditPointView extends AbstractView {
 
   #onFormSubmit = (evt) => {
     evt.preventDefault();
-    this._callback.submitForm();
+    this._callback.submitForm(this.#point);
   }
 
   #onRollupButtonClick = (evt) => {

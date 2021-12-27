@@ -3,11 +3,13 @@ import FiltersView from '../view/filters-view.js';
 import SortView from '../view/sort-view.js';
 import PointListView from '../view/point-list-view.js';
 import NoPointView from '../view/no-point-view.js';
+import TripMainInfoView from '../view/trip-info-view.js';
+
 import { render, RenderPosition } from '../utils/render.js';
 import { PointPresenter } from './point-presenter.js';
 import { updateItem } from '../utils/common.js';
 
-//const tripInfoContainer = document.querySelector('.trip-main');
+const tripInfoContainer = document.querySelector('.trip-main');
 const menuContainer = document.querySelector('.trip-controls__navigation');
 const filtersContainer = document.querySelector('.trip-controls__filters');
 
@@ -19,6 +21,7 @@ export default class TripPresenter {
   #sortComponent = new SortView();
   #pointListComponent = new PointListView();
   #noPointComponent = new NoPointView();
+  #tripInfoComponent = new TripMainInfoView();
 
   #points = [];
   #destinations = [];
@@ -88,15 +91,14 @@ export default class TripPresenter {
     render(this.#pointListComponent, this.#noPointComponent, RenderPosition.BEFORE_END);
   }
 
-  /*
   #renderTripInfo = () => {
-  написать компонент
-  }
-  */
+    this.#tripInfoComponent = new TripMainInfoView();
+    render(tripInfoContainer, this.#tripInfoComponent, RenderPosition.AFTER_BEGIN);
+  };
 
   #renderTrip = () => {
 
-    //this.#renderTripInfo();
+    this.#renderTripInfo();
     this.#renderMenu();
     this.#renderFilters();
     this.#renderSort();

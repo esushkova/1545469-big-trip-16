@@ -2,7 +2,6 @@ import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
 import { render, RenderPosition, replace, remove } from '../utils/render.js';
 import { isEscapeEvent } from '../utils/common.js';
-import { points } from '../mock/point.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -24,16 +23,19 @@ export default class PointPresenter {
 
   #mode = Mode.DEFAULT;
 
-  constructor(pointListContainer, changeData, changeMode) {
+  constructor(pointListContainer, changeData, changeMode, destinations, offers) {
     this.#pointListContainer = pointListContainer;
+    this.#destinations = destinations;
+    this.#offers = offers;
+
     this.#changeData = changeData;
     this.#changeMode = changeMode;
   }
 
   init = (point, destinations, offers) => {
     this.#point = point;
-    this.#destinations = destinations;
-    this.#offers = offers;
+    //this.#destinations = destinations;
+    //this.#offers = offers;
 
     const prevPointComponent = this.#pointComponent;
     const prevEditPointComponent = this.#editPointComponent;
@@ -68,12 +70,12 @@ export default class PointPresenter {
     remove(this.#editPointComponent);
   }
 
- resetView = () => {
-  if (this.#mode !== Mode.DEFAULT) {
-    //this.#editPointComponent.reset(this.#point);
-    this.#replaceFormToPoint();
-  }
-};
+  resetView = () => {
+    if (this.#mode !== Mode.DEFAULT) {
+      //this.#editPointComponent.reset(this.#point);
+      this.#replaceFormToPoint();
+    }
+  };
 
   #replacePointToForm = () => {
     replace(this.#editPointComponent, this.#pointComponent);
@@ -101,7 +103,7 @@ export default class PointPresenter {
   };
 
   #handleFavoriteClick = () => {
-    this.#changeData({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#changeData({ ...this.#point, isFavorite: !this.#point.isFavorite });
   }
 
   #handleFormSubmit = (point) => {
@@ -115,4 +117,4 @@ export default class PointPresenter {
 
 }
 
-export {PointPresenter};
+export { PointPresenter };

@@ -5,8 +5,7 @@ import PointListView from '../view/point-list-view.js';
 import NoPointView from '../view/no-point-view.js';
 import { render, RenderPosition } from '../utils/render.js';
 import { PointPresenter } from './point-presenter.js';
-import {updateItem} from '../utils/common.js';
-
+import { updateItem } from '../utils/common.js';
 
 //const tripInfoContainer = document.querySelector('.trip-main');
 const menuContainer = document.querySelector('.trip-controls__navigation');
@@ -35,7 +34,7 @@ export default class TripPresenter {
   init = (points, destinations, offers) => {
     this.#points = [...points];
     this.#destinations = destinations;
-  this.#offers = offers;
+    this.#offers = offers;
     render(this.#tripContainer, this.#pointListComponent, RenderPosition.BEFORE_END);
 
     this.#renderTrip();
@@ -43,7 +42,7 @@ export default class TripPresenter {
 
   #handlePointChange = (updatedPoint) => {
     this.#points = updateItem(this.#points, updatedPoint);
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.#destinations, this.#offers);
   }
 
 
@@ -110,4 +109,4 @@ export default class TripPresenter {
   };
 }
 
-export {TripPresenter};
+export { TripPresenter };

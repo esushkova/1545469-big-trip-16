@@ -7,7 +7,9 @@ import TripMainInfoView from '../view/trip-info-view.js';
 
 import { render, RenderPosition } from '../utils/render.js';
 import { PointPresenter } from './point-presenter.js';
-import { updateItem } from '../utils/common.js';
+import { updateItem, sortPrice } from '../utils/common.js';
+import { SortType } from '../const.js';
+
 
 const tripInfoContainer = document.querySelector('.trip-main');
 const menuContainer = document.querySelector('.trip-controls__navigation');
@@ -28,6 +30,8 @@ export default class TripPresenter {
   #offers = [];
 
   #pointPresenter = new Map();
+  #currentSortType = SortType.DEFAULT;
+  #sourcedPoints = [];
 
 
   constructor(tripContainer) {
@@ -36,6 +40,7 @@ export default class TripPresenter {
 
   init = (points, destinations, offers) => {
     this.#points = [...points];
+    this.#sourcedPoints = [...points];
     this.#destinations = destinations;
     this.#offers = offers;
     render(this.#tripContainer, this.#pointListComponent, RenderPosition.BEFORE_END);
@@ -45,6 +50,7 @@ export default class TripPresenter {
 
   #handlePointChange = (updatedPoint) => {
     this.#points = updateItem(this.#points, updatedPoint);
+    this.#sourcedPoints = updateItem(this.#sourcedPoints, updatedPoint);
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.#destinations, this.#offers);
   }
 
@@ -61,8 +67,32 @@ export default class TripPresenter {
     render(filtersContainer, this.#filtersComponent, RenderPosition.AFTER_BEGIN);
   }
 
+  #sortPoints = (sortType) => {
+    switch (sortType) {
+      case SortType.PRICE:
+        this.#points.sort(sortPrice);
+        break;
+      default:
+        this.#points = [...this.#sourcedPoints];
+    }
+    this.#currentSortType = sortType;
+  };
+
+  #handleSortTypeChange = (sortType) => {
+    // - Сортируем задачи
+    // - Очищаем список
+    // - Рендерим список заново
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+    this.#sortPoints(sortType);
+    this.#clearPointList();
+    this.#renderPointList();
+  };
+
   #renderSort = () => {
     render(this.#tripContainer, this.#sortComponent, RenderPosition.AFTER_BEGIN);
+    this.#sortComponent.setTripSortChangeHandler(this.#handleSortTypeChange);
   }
 
   #renderPointList = () => {

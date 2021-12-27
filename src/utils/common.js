@@ -17,3 +17,12 @@ export const updateItem = (items, update) => {
     ...items.slice(index + 1),
   ];
 };
+
+const sortPrice = (point1, point2) => {
+  if (point1.price >= point2.price) {
+    return -1;
+  }
+  return 1;
+};
+
+export { sortPrice };

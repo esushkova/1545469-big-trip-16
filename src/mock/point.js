@@ -227,8 +227,8 @@ const points = [
   generatePoint({
     type: 'bus',
     basePrice: 500,
-    startDate: new Date('2021-12-01T16:00:56.845Z'),
-    finishDate: new Date('2021-12-03T12:00:56.845Z'),
+    startDate: new Date('2021-10-01T16:00:56.845Z'),
+    finishDate: new Date('2021-10-03T12:00:56.845Z'),
   }),
 ];
 

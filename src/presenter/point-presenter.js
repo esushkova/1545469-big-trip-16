@@ -8,7 +8,7 @@ const Mode = {
   EDITING: 'EDITING',
 };
 
-export default class PointPresenter {
+class PointPresenter {
   #pointListContainer = null;
 
   #pointComponent = null;
@@ -23,10 +23,8 @@ export default class PointPresenter {
 
   #mode = Mode.DEFAULT;
 
-  constructor(pointListContainer, changeData, changeMode, destinations, offers) {
+  constructor(pointListContainer, changeData, changeMode) {
     this.#pointListContainer = pointListContainer;
-    this.#destinations = destinations;
-    this.#offers = offers;
 
     this.#changeData = changeData;
     this.#changeMode = changeMode;
@@ -34,8 +32,8 @@ export default class PointPresenter {
 
   init = (point, destinations, offers) => {
     this.#point = point;
-    //this.#destinations = destinations;
-    //this.#offers = offers;
+    this.#destinations = destinations;
+    this.#offers = offers;
 
     const prevPointComponent = this.#pointComponent;
     const prevEditPointComponent = this.#editPointComponent;
@@ -94,7 +92,6 @@ export default class PointPresenter {
     if (isEscapeEvent(evt)) {
       evt.preventDefault();
       this.#replaceFormToPoint();
-      document.removeEventListener('keydown', this.#onEscKeyDown);
     }
   };
 
@@ -117,4 +114,4 @@ export default class PointPresenter {
 
 }
 
-export { PointPresenter };
+export { PointPresenter }

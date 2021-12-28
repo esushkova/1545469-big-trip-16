@@ -37,10 +37,10 @@ export default class SortView extends AbstractView {
 
   setTripSortChangeHandler = (callback) => {
     this._callback.sortTypeChange = callback;
-    this.element.addEventListener('click', this.#onTripSortChange);
+    this.element.addEventListener('click', this.#onTripSortClick);
   }
 
-  #onTripSortChange = (evt) => {
+  #onTripSortClick = (evt) => {
     if (evt.target.matches('input[type="radio]')) {
       return;
     }

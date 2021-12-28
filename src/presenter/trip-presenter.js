@@ -3,11 +3,11 @@ import FiltersView from '../view/filters-view.js';
 import SortView from '../view/sort-view.js';
 import PointListView from '../view/point-list-view.js';
 import NoPointView from '../view/no-point-view.js';
-import TripMainInfoView from '../view/trip-info-view.js';
+import TripMainInfoView from '../view/trip-main-info-view.js';
 
 import { render, RenderPosition } from '../utils/render.js';
 import { PointPresenter } from './point-presenter.js';
-import { updateItem, sortPrice } from '../utils/common.js';
+import { updateItemById, sortPointByPrice } from '../utils/common.js';
 import { SortType } from '../const.js';
 
 
@@ -15,7 +15,7 @@ const tripInfoContainer = document.querySelector('.trip-main');
 const menuContainer = document.querySelector('.trip-controls__navigation');
 const filtersContainer = document.querySelector('.trip-controls__filters');
 
-export default class TripPresenter {
+class TripPresenter {
   #tripContainer = null;
 
   #menuComponent = new MenuView();
@@ -49,8 +49,8 @@ export default class TripPresenter {
   }
 
   #handlePointChange = (updatedPoint) => {
-    this.#points = updateItem(this.#points, updatedPoint);
-    this.#sourcedPoints = updateItem(this.#sourcedPoints, updatedPoint);
+    this.#points = updateItemById(this.#points, updatedPoint);
+    this.#sourcedPoints = updateItemById(this.#sourcedPoints, updatedPoint);
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.#destinations, this.#offers);
   }
 
@@ -70,7 +70,7 @@ export default class TripPresenter {
   #sortPoints = (sortType) => {
     switch (sortType) {
       case SortType.PRICE:
-        this.#points.sort(sortPrice);
+        this.#points.sort(sortPointByPrice);
         break;
       default:
         this.#points = [...this.#sourcedPoints];
@@ -82,12 +82,15 @@ export default class TripPresenter {
     // - Сортируем задачи
     // - Очищаем список
     // - Рендерим список заново
+
+
     if (this.#currentSortType === sortType) {
       return;
     }
     this.#sortPoints(sortType);
     this.#clearPointList();
     this.#renderPointList();
+
   };
 
   #renderSort = () => {
@@ -111,10 +114,10 @@ export default class TripPresenter {
     this.#pointPresenter.clear();
   }
 
-  #renderPoints = (from, to) => {
-    for (let i = 0; i < to; i++) {
-      this.#renderPoint(this.#points[i]);
-    }
+  #renderPoints = () => {
+    this.#points.forEach(point => {
+      this.#renderPoint(point)
+    });
   };
 
   #renderNoPoints = () => {
@@ -135,10 +138,11 @@ export default class TripPresenter {
 
     if (this.#points.length === 0) {
       this.#renderNoPoints();
+      return;
     }
 
     this.#renderPointList();
   };
 }
 
-export { TripPresenter };
+export { TripPresenter }

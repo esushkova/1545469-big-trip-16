@@ -44,7 +44,7 @@ class PointPresenter {
     this.#pointComponent.setRollupButtonClickHandler(this.#handleEditClick);
     this.#editPointComponent.setSaveHandler(this.#handleFormSubmit);
     this.#editPointComponent.setRollupButtonClickHandler(this.#handleEditReClick);
-    this.#pointComponent.setOnFavoriteClick(this.#handleFavoriteClick);
+    this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
 
     if (prevPointComponent === null || prevEditPointComponent === null) {
       render(this.#pointListContainer, this.#pointComponent, RenderPosition.BEFORE_END);

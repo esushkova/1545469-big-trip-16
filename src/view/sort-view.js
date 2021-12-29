@@ -35,17 +35,13 @@ export default class SortView extends AbstractView {
     return createSortTemplate();
   }
 
-  setTripSortChangeHandler = (callback) => {
+  setChangeHandler = (callback) => {
     this._callback.changeSortType = callback;
-    this.element.addEventListener('click', this.#onTripSortClick);
+    this.element.addEventListener('change', this.#onChange);
   }
 
-  #onTripSortClick = (evt) => {
-    if (evt.target.matches('input[type="radio"]')) {
-      return;
-    }
-
+  #onChange = (evt) => {
+    evt.preventDefault();
     this._callback.changeSortType(evt.target.dataset.sortType);
   }
 }
-

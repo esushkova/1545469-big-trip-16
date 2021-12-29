@@ -187,7 +187,7 @@ export default class EditPointView extends AbstractView {
   }
 
   setRollupButtonClickHandler = (callback) => {
-    this._callback.rollUpForm = callback;
+    this._callback.rollupForm = callback;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onRollupButtonClick);
   }
 
@@ -198,6 +198,6 @@ export default class EditPointView extends AbstractView {
 
   #onRollupButtonClick = (evt) => {
     evt.preventDefault();
-    this._callback.rollUpForm();
+    this._callback.rollupForm();
   }
 }

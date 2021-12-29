@@ -8,7 +8,7 @@ const Mode = {
   EDITING: 'EDITING',
 };
 
-class PointPresenter {
+export default class PointPresenter {
   #pointListContainer = null;
 
   #pointComponent = null;
@@ -70,15 +70,16 @@ class PointPresenter {
 
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
-      //this.#editPointComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
   };
 
   #replacePointToForm = () => {
+    this.#changeMode(); // TripPresenter.handleChangeMode
+
     replace(this.#editPointComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#onEscKeyDown);
-    this.#changeMode();
+
     this.#mode = Mode.EDITING;
   };
 
@@ -86,13 +87,6 @@ class PointPresenter {
     replace(this.#pointComponent, this.#editPointComponent);
     document.removeEventListener('keydown', this.#onEscKeyDown);
     this.#mode = Mode.DEFAULT;
-  };
-
-  #onEscKeyDown = (evt) => {
-    if (isEscapeEvent(evt)) {
-      evt.preventDefault();
-      this.#replaceFormToPoint();
-    }
   };
 
   #handleEditClick = () => {
@@ -112,6 +106,10 @@ class PointPresenter {
     this.#replaceFormToPoint();
   }
 
+  #onEscKeyDown = (evt) => {
+    if (isEscapeEvent(evt)) {
+      evt.preventDefault();
+      this.#replaceFormToPoint();
+    }
+  };
 }
-
-export { PointPresenter }

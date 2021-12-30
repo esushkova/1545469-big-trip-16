@@ -16,12 +16,9 @@ const createTripTitleDatesTemplate = (points) => {
   const dateEnd = points[points.length - 1].finishDate;
 
   return `<div class="trip-info__main">
-    <h1 class="trip-info__title">${cities.length > 3 ? `${cities[0]} — ... — ${cities[cities.length - 1]}` : `${cities[0]} — ${cities[cities.length - 1]}`
-    }</h1>
-    <p class="trip-info__dates">${transformDate(dateBegin, 'DD MMM')}&nbsp;&mdash;&nbsp;${transformDate(
-      dateEnd,
-      'DD MMM',
-    )}</p>
+    <h1 class="trip-info__title">${cities.length > 3 ? `${cities[0]} — ... — ${cities[cities.length - 1]}` : `${cities[0]} — ${cities[cities.length - 1]}`}
+    </h1>
+    <p class="trip-info__dates">${transformDate(dateBegin, 'DD MMM')}&nbsp;&mdash;&nbsp;${transformDate(dateEnd, 'DD MMM')}</p>
    </div>`
 };
 

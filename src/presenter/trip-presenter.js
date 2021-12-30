@@ -133,7 +133,6 @@ export default class TripPresenter {
   }
 
   #renderTripInfo = (points) => {
-    console.log(points)
     this.#tripInfoComponent = new TripMainInfoView(points);
     render(this.#tripInfoContainer, this.#tripInfoComponent, RenderPosition.AFTER_BEGIN);
 

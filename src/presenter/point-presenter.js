@@ -75,7 +75,7 @@ export default class PointPresenter {
   };
 
   #replacePointToForm = () => {
-    this.#changeMode(); // TripPresenter.handleChangeMode
+    this.#changeMode();
 
     replace(this.#editPointComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#onEscKeyDown);

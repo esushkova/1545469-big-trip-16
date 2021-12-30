@@ -19,7 +19,7 @@ const createTripTitleDatesTemplate = (points) => {
     <h1 class="trip-info__title">${cities.length > 3 ? `${cities[0]} — ... — ${cities[cities.length - 1]}` : `${cities[0]} — ${cities[cities.length - 1]}`}
     </h1>
     <p class="trip-info__dates">${transformDate(dateBegin, 'DD MMM')}&nbsp;&mdash;&nbsp;${transformDate(dateEnd, 'DD MMM')}</p>
-   </div>`
+   </div>`;
 };
 
 export default class TripTitleDatesView extends AbstractView {

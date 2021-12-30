@@ -1,4 +1,4 @@
-const POINT_TYPES = [
+export const POINT_TYPES = [
   'taxi',
   'bus',
   'train',
@@ -10,4 +10,8 @@ const POINT_TYPES = [
   'restaurant',
 ];
 
-export { POINT_TYPES };
+export const SortType = {
+  DEFAULT: 'default',
+  TIME: 'time',
+  PRICE: 'price',
+};

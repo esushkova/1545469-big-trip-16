@@ -1,3 +1,4 @@
+import {nanoid} from 'nanoid';
 import { getRandomIntInclusive } from './random.js';
 import { POINT_TYPES } from '../const.js';
 
@@ -188,7 +189,7 @@ export const generatePoint = ({
 } = {}) => {
 
   return {
-    id,
+    id: nanoid(),
     type,
     destination,
     isFavorite,
@@ -211,6 +212,7 @@ const points = [
     destination: destinations[0],
     startDate: new Date('2021-11-29T22:55:56.845Z'),
     finishDate: new Date('2021-11-31T22:55:56.845Z'),
+    basePrice: 50,
     offers: offers.find((offer) => offer.type = 'taxi').offers,
   }),
 
@@ -219,15 +221,15 @@ const points = [
     destination: destinations[1],
     startDate: new Date('2021-12-01T10:00:56.845Z'),
     finishDate: new Date('2021-12-01T12:00:56.845Z'),
-    basePrice: 100,
+    basePrice: 1000,
     offers: offers.find((offer) => offer.type = 'taxi').offers,
   }),
 
   generatePoint({
     type: 'bus',
     basePrice: 500,
-    startDate: new Date('2021-12-01T16:00:56.845Z'),
-    finishDate: new Date('2021-12-03T12:00:56.845Z'),
+    startDate: new Date('2021-10-01T16:00:56.845Z'),
+    finishDate: new Date('2021-10-03T12:00:56.845Z'),
   }),
 ];
 

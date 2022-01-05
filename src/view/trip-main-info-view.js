@@ -6,14 +6,8 @@ const createTripMainInfoTemplate = () => (
 );
 
 export default class TripMainInfoView extends AbstractView {
-  #points = [];
-
-  constructor(points) {
-    super();
-    this.#points = points;
-  }
 
   get template() {
-    return createTripMainInfoTemplate(this.#points);
+    return createTripMainInfoTemplate();
   }
 }

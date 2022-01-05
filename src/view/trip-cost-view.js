@@ -1,12 +1,13 @@
 import AbstractView from './abstract-view.js';
 
 const createTripCostTemplate = (points) => {
-  let totalPrice = 0;
+  let totalBasePrice = 0;
 
   for (const point of points) {
-    totalPrice += point['basePrice'];
+    totalBasePrice += point.basePrice;
   }
-  return `<p class="trip-info__cost">Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalPrice}</span>
+
+  return `<p class="trip-info__cost">Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalBasePrice}</span>
    </p>`;
 };
 

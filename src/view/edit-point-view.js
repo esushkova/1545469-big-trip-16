@@ -1,7 +1,7 @@
 import { POINT_TYPES } from '../const.js';
 import dayjs from 'dayjs';
 import { capitalizeFirstLetter } from '../utils/common.js';
-import AbstractView from './abstract-view.js';
+import SmartView from './smart-view.js';
 
 const createOffersListTemplate = (allOffers) => (
 
@@ -83,18 +83,20 @@ const createDestinationTemplate = (destination) =>
 
     </section>`;
 
-const createEditPointTemplate = (point, destinations, renderedOffers) => {
+const createEditPointTemplate = (data, destinations, renderedOffers) => {
   const {
     type,
     startDate,
     finishDate,
     destination,
     basePrice
-  } = point;
+  } = data;
 
   const startTime = dayjs(startDate);
   const endTime = dayjs(finishDate);
 
+  console.log(createDestinationListTemplate(destinations))
+;
   return `<li class="trip-events__item">
 <form class="event event--edit" action="#" method="post">
   <header class="event__header">
@@ -164,21 +166,33 @@ const createEditPointTemplate = (point, destinations, renderedOffers) => {
 </li>`;
 };
 
-export default class EditPointView extends AbstractView {
-  #point = null;
+export default class EditPointView extends SmartView{
   #destinations = [];
   #offers = [];
 
   constructor(point, destinations, offers) {
     super();
-    this.#point = point;
+    this._data = EditPointView.parsePointToData(point);
     this.#destinations = destinations;
     this.#offers = offers;
+
+    this.#setInnerHandlers();
   }
 
   get template() {
-    const renderedOffers = getRenderedOffers(this.#point, this.#offers);
-    return createEditPointTemplate(this.#point, this.#destinations, renderedOffers);
+    const renderedOffers = getRenderedOffers(this._data, this.#offers);
+    return createEditPointTemplate(this._data, this.#destinations, renderedOffers);
+  }
+
+  reset = (point) => {
+    this.updateData(
+      EditPointView.parsePointToData(point),
+    );
+  }
+
+  restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setSaveHandler(this._callback.submitForm);
   }
 
   setSaveHandler = (callback) => {
@@ -193,11 +207,78 @@ export default class EditPointView extends AbstractView {
 
   #onFormSubmit = (evt) => {
     evt.preventDefault();
-    this._callback.submitForm(this.#point);
+
+    this._callback.submitForm(EditPointView.parseDataToPoint(this._data));
   }
 
   #onRollupButtonClick = (evt) => {
     evt.preventDefault();
     this._callback.rollupForm();
+  }
+
+  #setInnerHandlers = () => {
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange);
+
+  //не работает отображение измененного названия в свернутой точке
+  this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationNameChange);
+   }
+
+  #onTypeChange = (evt) => {
+    evt.preventDefault();
+    this.updateData({
+      typeForElement: evt.target.value,
+      offersForElement: [],
+    });
+  }
+
+  #onPriceChange = (evt) => {
+    evt.preventDefault();
+    this.updateData(
+      {
+        basePriceForElement: evt.target.value,
+      },
+      true,
+    );
+  };
+
+  //не работает отображение измененного названия в свернутой точке
+  #onDestinationNameChange = (evt) => {
+    evt.preventDefault();
+    this.updateData({
+      destinationNameForElement: evt.target.value,
+      },
+      true,
+    );
+  };
+
+   static parsePointToData = (point) => ({
+    ...point,
+    typeForElement: point.type,
+    destinationNameForElement: point.destination.name,
+    startDateForElement: point.startDate,
+    finishDateForElement: point.finishDate,
+    basePriceForElement: point.basePrice,
+    offersForElement: point.offers,
+  });
+
+  static parseDataToPoint = (data) => {
+    const point = {...data};
+
+    point.type = point.typeForElement;
+    point.destination.name = point.destinationNameForElement;
+    point.startDate = point.startDateForElement;
+    point.finishDate = point.finishDateForElement;
+    point.basePrice = point.basePriceForElement;
+    point.offers = point.offersForElement;
+
+    delete point.typeForElement;
+    delete point.destinationNameForElement;
+    delete point.startDateForElement;
+    delete point.finishDateForElement;
+    delete point.basePriceForElement;
+    delete point.offersForElement;
+
+    return point;
   }
 }

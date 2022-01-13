@@ -175,6 +175,101 @@ const offers = [
       }
     ]
   },
+
+  {
+    type: 'drive',
+    offers: [
+      {
+        'id': 8,
+        'title': 'Add meal',
+        'price': 20
+      }, {
+        'id': 9,
+        'title': 'Choose seats',
+        'price': 15
+      }, {
+        'id': 10,
+        'title': 'Upgrade to a business class',
+        'price': 100
+      }
+    ]
+  },
+
+  {
+    type: 'train',
+    offers: [
+      {
+        'id': 5,
+        'title': 'Add meal',
+        'price': 20
+      }, {
+        'id': 6,
+        'title': 'Choose seats',
+        'price': 15
+      }, {
+        'id': 7,
+        'title': 'Upgrade to a business class',
+        'price': 100
+      }
+    ]
+  },
+
+  {
+    type: 'check-in',
+    offers: [
+      {
+        'id': 5,
+        'title': 'Add meal',
+        'price': 20
+      }, {
+        'id': 6,
+        'title': 'Choose seats',
+        'price': 15
+      }, {
+        'id': 7,
+        'title': 'Upgrade to a business class',
+        'price': 100
+      }
+    ]
+  },
+
+  {
+    type: 'sightseeing',
+    offers: [
+      {
+        'id': 5,
+        'title': 'Add meal',
+        'price': 20
+      }, {
+        'id': 6,
+        'title': 'Choose seats',
+        'price': 15
+      }, {
+        'id': 7,
+        'title': 'Upgrade to a business class',
+        'price': 100
+      }
+    ]
+  },
+
+  {
+    type: 'restaurant',
+    offers: [
+      {
+        'id': 5,
+        'title': 'Add meal',
+        'price': 20
+      }, {
+        'id': 6,
+        'title': 'Choose seats',
+        'price': 15
+      }, {
+        'id': 7,
+        'title': 'Upgrade to a business class',
+        'price': 100
+      }
+    ]
+  },
 ];
 
 export const generatePoint = ({

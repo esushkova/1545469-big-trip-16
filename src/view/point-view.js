@@ -10,7 +10,7 @@ const createOfferTemplate = ({ title, price }) => (
 );
 
 const createPointTemplate = (point) => {
-  const { type, startDate, finishDate, isFavorite, offers, basePrice } = point;
+  const { type, startDate, finishDate, isFavorite, offers, basePrice, destination } = point;
 
   const startTime = dayjs(startDate);
   const endTime = dayjs(finishDate);
@@ -28,7 +28,7 @@ const createPointTemplate = (point) => {
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} Amsterdam</h3>
+      <h3 class="event__title">${type} ${destination.name}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="${startTime.toISOString()}">${startTime.format('HH:mm')}</time>

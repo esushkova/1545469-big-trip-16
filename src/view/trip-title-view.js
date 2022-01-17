@@ -1,27 +1,30 @@
 import AbstractView from './abstract-view.js';
+import {
+  getFirstItem,
+  getLastItem,
+} from '../utils/common.js';
 
-const createTripTitleTemplate = (points) => {
-  const uniqueNames = new Set();
+const MAX_CITIES_IN_TITLE = 3;
 
-  points.forEach(({destination}) => {
-    uniqueNames.add(destination.name);
-  });
+const createTripTitleTemplate = (uniqueNames) => (
+  `<h1 class="trip-info__title">
+      ${uniqueNames.length > MAX_CITIES_IN_TITLE
+         ? `${getFirstItem(uniqueNames)} — ... — ${getLastItem(uniqueNames)}`
+        : `${getFirstItem(uniqueNames)} — ${getLastItem(uniqueNames)}`
+      }
+  </h1>`
+);
 
-return `<div class="trip-info__main">
-        <h1 class="trip-info__title">${uniqueNames.size > MAX_CITIES_IN_TITLE ? `${getFirstItem([...uniqueNames])} — ... — ${getLastItem([...uniqueNames])}` : `${getFirstItem([...uniqueNames])} — ${getLastItem([...uniqueNames])}`}
-        </h1>
-        </div>`;
-};
+export default class TripTitleView extends AbstractView {
+  #uniqueNames = [];
 
-  export default class TripTitleView extends AbstractView {
-    #points = [];
+  constructor(uniqueNames) {
+    super();
 
-    constructor(points) {
-      super();
-      this.#points = points;
-    }
-
-    get template() {
-      return createTripTitleTemplate(this.#points);
-    }
+    this.#uniqueNames = uniqueNames;
   }
+
+  get template() {
+    return createTripTitleTemplate(this.#uniqueNames);
+  }
+}

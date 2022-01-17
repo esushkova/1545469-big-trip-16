@@ -3,8 +3,15 @@ import dayjs from 'dayjs';
 import { capitalizeFirstLetter } from '../utils/common.js';
 import SmartView from './smart-view.js';
 
-const createOffersListTemplate = (allOffers) => (
 
+/*
+{
+        'id': 7,
+        'title': 'Upgrade to a business class',
+        'price': 100
+      }
+**/
+const createOffersListTemplate = (allOffers) => (
   `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
       <div class="event__available-offers">
@@ -83,20 +90,22 @@ const createDestinationTemplate = (destination) =>
 
     </section>`;
 
-const createEditPointTemplate = (data, destinations, renderedOffers) => {
+const createEditPointTemplate = (data) => {
   const {
     type,
     startDate,
     finishDate,
     destination,
-    basePrice
+    basePrice,
+    destinations,
+    renderedOffers,
+    hasOffers,
+    hasDestination,
   } = data;
 
   const startTime = dayjs(startDate);
   const endTime = dayjs(finishDate);
 
-  console.log(createDestinationListTemplate(destinations))
-;
   return `<li class="trip-events__item">
 <form class="event event--edit" action="#" method="post">
   <header class="event__header">
@@ -144,7 +153,7 @@ const createEditPointTemplate = (data, destinations, renderedOffers) => {
         <span class="visually-hidden">Price</span>
         &euro;
       </label>
-      <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+      <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
     </div>
 
     <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -156,10 +165,8 @@ const createEditPointTemplate = (data, destinations, renderedOffers) => {
   </header>
   <section class="event__details">
 
-  ${renderedOffers.length === 0 ? '' : createOffersListTemplate(renderedOffers)}
-
-  ${destination.description.length === 0 && destination.pictures.length === 0 ? '' : createDestinationTemplate(destination)}
-
+  ${hasOffers ? createOffersListTemplate(renderedOffers): ''}
+  ${hasDestination ? createDestinationTemplate(destination) : ''}
 
   </section>
 </form>
@@ -172,17 +179,19 @@ export default class EditPointView extends SmartView{
 
   constructor(point, destinations, offers) {
     super();
-    this._data = EditPointView.parsePointToData(point);
+
     this.#destinations = destinations;
     this.#offers = offers;
+
+    this._data = EditPointView.parsePointToData(point, destinations, offers);
 
     this.#setInnerHandlers();
   }
 
   get template() {
-    const renderedOffers = getRenderedOffers(this._data, this.#offers);
-    return createEditPointTemplate(this._data, this.#destinations, renderedOffers);
+    return createEditPointTemplate(this._data);
   }
+
 
   reset = (point) => {
     this.updateData(
@@ -190,9 +199,11 @@ export default class EditPointView extends SmartView{
     );
   }
 
+
   restoreHandlers = () => {
     this.#setInnerHandlers();
     this.setSaveHandler(this._callback.submitForm);
+    this.setRollupButtonClickHandler(this._callback.rollupForm);
   }
 
   setSaveHandler = (callback) => {
@@ -208,6 +219,10 @@ export default class EditPointView extends SmartView{
   #onFormSubmit = (evt) => {
     evt.preventDefault();
 
+    this.updateData({
+      offer: this.#onOffersChange(),
+    }, true);
+
     this._callback.submitForm(EditPointView.parseDataToPoint(this._data));
   }
 
@@ -217,67 +232,103 @@ export default class EditPointView extends SmartView{
   }
 
   #setInnerHandlers = () => {
-    this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
-    this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange);
+    const element = this.element;
 
-  //не работает отображение измененного названия в свернутой точке
-  this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationNameChange);
-   }
+    element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
+    element.querySelector('.event__input--price').addEventListener('input', this.#onPriceChange);
+
+    const destination = element.querySelector('.event__input--destination');
+
+    destination.addEventListener('change', this.#onDestinationChange);
+    destination.addEventListener('keydown', this.#onDestinationKeydown);
+    destination.addEventListener('focus', this.#onDestinationFocus);
+  }
 
   #onTypeChange = (evt) => {
     evt.preventDefault();
+
     this.updateData({
-      typeForElement: evt.target.value,
-      offersForElement: [],
+      type: evt.target.value,
+      offer: this.#offers.find(({type}) => evt.target.value === type).offers,
     });
   }
 
   #onPriceChange = (evt) => {
     evt.preventDefault();
-    this.updateData(
-      {
-        basePriceForElement: evt.target.value,
-      },
-      true,
-    );
+    this.updateData({ basePrice: evt.target.valueAsNumber }, true);
   };
 
-  //не работает отображение измененного названия в свернутой точке
-  #onDestinationNameChange = (evt) => {
+  #onDestinationChange = (evt) => {
     evt.preventDefault();
-    this.updateData({
-      destinationNameForElement: evt.target.value,
-      },
-      true,
-    );
+
+    const newDestination = evt.target.value;
+    const destination = this.#destinations.find(({ name }) => name === newDestination);
+
+    this.updateData({ destination }, false);
   };
 
-   static parsePointToData = (point) => ({
-    ...point,
-    typeForElement: point.type,
-    destinationNameForElement: point.destination.name,
-    startDateForElement: point.startDate,
-    finishDateForElement: point.finishDate,
-    basePriceForElement: point.basePrice,
-    offersForElement: point.offers,
-  });
+  #onDestinationKeydown = (evt) => {
+    evt.preventDefault();
+  }
+
+  #onDestinationFocus = (evt) => {
+    const target = evt.target;
+
+    target.placeholder = target.value;
+    target.value = '';
+
+    target.addEventListener('blur', () => {
+      target.value = target.placeholder;
+    }, {once: true});
+  }
+
+  #onOffersChange = () => {
+    const offersCollection = this.element.querySelectorAll('.event__offer-checkbox');
+    const checkboxOffers = Array.from(offersCollection);
+    const currentPointType = this.#offers.find((offer) => offer.type === this._data.type)
+
+    const checkedOffers = [];
+    const offers = [];
+
+    checkboxOffers.map((offer) => {
+      const id = Number(offer.id);
+
+      if (offer.checked) {
+        checkedOffers.push(id);
+      }
+    });
+
+    currentPointType.offers.map((offer) => {
+      if (checkedOffers.includes(offer.id)) {
+        offers.push(offer);
+      }
+    });
+
+    console.log(offers); //потом удалить
+
+    return offers;
+  }
+
+  static parsePointToData = (point, destinations, offers) => {
+    const renderedOffers = getRenderedOffers(point, offers);
+    const { description, pictures } = point.destination;
+
+    return {
+      ...point,
+      renderedOffers,
+      destinations,
+      hasOffers: renderedOffers.length > 0,
+      hasDestination: description.length > 0 || pictures.length > 0,
+    };
+  };
 
   static parseDataToPoint = (data) => {
     const point = {...data};
 
-    point.type = point.typeForElement;
-    point.destination.name = point.destinationNameForElement;
-    point.startDate = point.startDateForElement;
-    point.finishDate = point.finishDateForElement;
-    point.basePrice = point.basePriceForElement;
-    point.offers = point.offersForElement;
-
-    delete point.typeForElement;
-    delete point.destinationNameForElement;
-    delete point.startDateForElement;
-    delete point.finishDateForElement;
-    delete point.basePriceForElement;
-    delete point.offersForElement;
+    delete point.renderedOffers;
+    delete point.destinations;
+    delete point.hasOffers;
+    delete point.hasDestination;
 
     return point;
   }

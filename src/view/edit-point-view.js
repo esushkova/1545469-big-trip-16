@@ -220,7 +220,7 @@ export default class EditPointView extends SmartView{
     evt.preventDefault();
 
     this.updateData({
-      offer: this.#onOffersChange(),
+      offers: this.#onOffersChange(),
     }, true);
 
     this._callback.submitForm(EditPointView.parseDataToPoint(this._data));
@@ -283,6 +283,7 @@ export default class EditPointView extends SmartView{
   }
 
   #onOffersChange = () => {
+
     const offersCollection = this.element.querySelectorAll('.event__offer-checkbox');
     const checkboxOffers = Array.from(offersCollection);
     const currentPointType = this.#offers.find((offer) => offer.type === this._data.type)

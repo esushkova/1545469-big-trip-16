@@ -22,6 +22,7 @@ const createOffersListTemplate = (allOffers) => (
           id="${id}"
           type="checkbox"
           name="${title}"
+          data-price="${price}"
           ${isChecked ? 'checked' : ''}
           >
           <label class="event__offer-label" for="${id}">
@@ -194,11 +195,21 @@ export default class EditPointView extends SmartView{
 
 
   reset = (point) => {
+/*
+1) корректно обновилось (или создалось заново) значение _data
+2) на основе новой _data обновился элемент
+
+Если без рефакторинга, то будет достаточно напрямую переопределить значение _data,
+как это сделано в конструкторе
+*/
+
     this.updateData(
       EditPointView.parsePointToData(point),
     );
-  }
 
+    this.updateElement()
+
+  }
 
   restoreHandlers = () => {
     this.#setInnerHandlers();
@@ -220,7 +231,7 @@ export default class EditPointView extends SmartView{
     evt.preventDefault();
 
     this.updateData({
-      offers: this.#onOffersChange(),
+      offers: this.#parseOffersCheckbox(),
     }, true);
 
     this._callback.submitForm(EditPointView.parseDataToPoint(this._data));
@@ -282,33 +293,26 @@ export default class EditPointView extends SmartView{
     }, {once: true});
   }
 
-  #onOffersChange = () => {
+  #parseOffersCheckbox = () => {
 
-    const offersCollection = this.element.querySelectorAll('.event__offer-checkbox');
-    const checkboxOffers = Array.from(offersCollection);
-    const currentPointType = this.#offers.find((offer) => offer.type === this._data.type)
+    const offersCollection = this.element.querySelectorAll('.event__offer-checkbox:checked');
 
     const checkedOffers = [];
-    const offers = [];
 
-    checkboxOffers.map((offer) => {
-      const id = Number(offer.id);
+    offersCollection.forEach(offer => {
+      const checkedOffer = {};
+      checkedOffer.id = Number(offer.id);
+      checkedOffer.title = offer.name;
+      checkedOffer.price = Number(offer.dataset.price);
 
-      if (offer.checked) {
-        checkedOffers.push(id);
-      }
+      checkedOffers.push(checkedOffer);
     });
 
-    currentPointType.offers.map((offer) => {
-      if (checkedOffers.includes(offer.id)) {
-        offers.push(offer);
-      }
-    });
+    console.log(checkedOffers);
 
-    console.log(offers); //потом удалить
-
-    return offers;
+    return checkedOffers;
   }
+
 
   static parsePointToData = (point, destinations, offers) => {
     const renderedOffers = getRenderedOffers(point, offers);

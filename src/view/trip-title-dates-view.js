@@ -1,22 +1,22 @@
 import AbstractView from './abstract-view.js';
 import {transformDate} from '../utils/common.js';
+import {getFirstItem} from '../utils/common.js';
+import {getLastItem} from '../utils/common.js';
+
+const MAX_CITIES_IN_TITLE = 3;
 
 const createTripTitleDatesTemplate = (points) => {
-  const cities = [];
-  cities[0] = points[0].destination.name;
+  const uniqueNames = new Set();
 
-  for (let i = 1; i <= points.length - 1; i++) {
+  points.forEach(({destination}) => {
+    uniqueNames.add(destination.name);
+  });
 
-    if (points[i].destination.name !== cities[cities.length - 1]) {
-      cities.push(points[i].destination.name);
-    }
-  }
-
-  const dateBegin = points[0].startDate;
-  const dateEnd = points[points.length - 1].finishDate;
+  const dateBegin = getFirstItem(points).startDate;
+  const dateEnd = getLastItem(points).finishDate;
 
   return `<div class="trip-info__main">
-    <h1 class="trip-info__title">${cities.length > 3 ? `${cities[0]} — ... — ${cities[cities.length - 1]}` : `${cities[0]} — ${cities[cities.length - 1]}`}
+    <h1 class="trip-info__title">${uniqueNames.size > MAX_CITIES_IN_TITLE ? `${getFirstItem([...uniqueNames])} — ... — ${getLastItem([...uniqueNames])}` : `${getFirstItem([...uniqueNames])} — ${getLastItem([...uniqueNames])}`}
     </h1>
     <p class="trip-info__dates">${transformDate(dateBegin, 'DD MMM')}&nbsp;&mdash;&nbsp;${transformDate(dateEnd, 'DD MMM')}</p>
    </div>`;

@@ -27,3 +27,8 @@ export const sortPointByTime = (point1, point2) => (point2.finishDate - point2.s
 export const sortPointByDay = (point1, point2) => point1.startDate - point2.startDate;
 
 export const transformDate = (date, format) => dayjs(date).format(format);
+
+export const getFirstItem = (items) => items[0];
+
+export const getLastItem = (items) => items[items.length - 1];
+

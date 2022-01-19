@@ -3,10 +3,6 @@ import FiltersView from '../view/filters-view.js';
 import SortView from '../view/sort-view.js';
 import PointListView from '../view/point-list-view.js';
 import NoPointView from '../view/no-point-view.js';
-import TripMainInfoView from '../view/trip-main-info-view.js';
-import TripTitleDatesView from '../view/trip-title-dates-view.js';
-import TripCostView from '../view/trip-cost-view.js';
-
 
 import { render, RenderPosition } from '../utils/render.js';
 import PointPresenter from './point-presenter.js';
@@ -15,7 +11,6 @@ import { SortType } from '../const.js';
 
 export default class TripPresenter {
   #tripContainer = null;
-  #tripInfoContainer = null;
   #menuContainer = null;
   #filtersContainer = null;
 
@@ -24,10 +19,6 @@ export default class TripPresenter {
   #sortComponent = new SortView();
   #pointListComponent = new PointListView();
   #noPointComponent = new NoPointView();
-  #tripInfoComponent = new TripMainInfoView();
-
-  #tripTitleDatesComponent = new TripTitleDatesView();
-  #tripCostComponent = new TripCostView();
 
   #points = [];
   #destinations = [];
@@ -37,9 +28,8 @@ export default class TripPresenter {
   #currentSortType = SortType.DEFAULT;
   #sourcedPoints = [];
 
-  constructor(tripContainer, tripInfoContainer, menuContainer, filtersContainer) {
+  constructor(tripContainer, menuContainer, filtersContainer) {
     this.#tripContainer = tripContainer;
-    this.#tripInfoContainer = tripInfoContainer;
     this.#menuContainer = menuContainer;
     this.#filtersContainer = filtersContainer;
   }
@@ -132,19 +122,7 @@ export default class TripPresenter {
     render(this.#pointListComponent, this.#noPointComponent, RenderPosition.BEFORE_END);
   }
 
-  #renderTripInfo = (points) => {
-    this.#tripInfoComponent = new TripMainInfoView(points);
-    render(this.#tripInfoContainer, this.#tripInfoComponent, RenderPosition.AFTER_BEGIN);
-
-    this.#tripTitleDatesComponent = new TripTitleDatesView(points);
-    render(this.#tripInfoComponent, this.#tripTitleDatesComponent, RenderPosition.AFTER_BEGIN);
-
-    this.#tripCostComponent = new TripCostView(this.#points);
-    render(this.#tripInfoComponent, this.#tripCostComponent, RenderPosition.BEFORE_END);
-  };
-
   #renderTrip = () => {
-    this.#renderTripInfo(this.#points);
     this.#renderMenu();
     this.#renderFilters();
     this.#renderSort();

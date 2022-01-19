@@ -175,9 +175,104 @@ const offers = [
       }
     ]
   },
+
+  {
+    type: 'drive',
+    offers: [
+      {
+        'id': 8,
+        'title': 'Add meal',
+        'price': 20
+      }, {
+        'id': 9,
+        'title': 'Choose seats',
+        'price': 15
+      }, {
+        'id': 10,
+        'title': 'Upgrade to a business class',
+        'price': 100
+      }
+    ]
+  },
+
+  {
+    type: 'train',
+    offers: [
+      {
+        'id': 11,
+        'title': 'Add meal',
+        'price': 20
+      }, {
+        'id': 12,
+        'title': 'Choose seats',
+        'price': 15
+      }, {
+        'id': 13,
+        'title': 'Upgrade to a business class',
+        'price': 100
+      }
+    ]
+  },
+
+  {
+    type: 'check-in',
+    offers: [
+      {
+        'id': 14,
+        'title': 'Add meal',
+        'price': 20
+      }, {
+        'id': 15,
+        'title': 'Choose seats',
+        'price': 15
+      }, {
+        'id': 16,
+        'title': 'Upgrade to a business class',
+        'price': 100
+      }
+    ]
+  },
+
+  {
+    type: 'sightseeing',
+    offers: [
+      {
+        'id': 17,
+        'title': 'Add meal',
+        'price': 20
+      }, {
+        'id': 18,
+        'title': 'Choose seats',
+        'price': 15
+      }, {
+        'id': 19,
+        'title': 'Upgrade to a business class',
+        'price': 100
+      }
+    ]
+  },
+
+  {
+    type: 'restaurant',
+    offers: [
+      {
+        'id': 20,
+        'title': 'Add meal',
+        'price': 20
+      }, {
+        'id': 21,
+        'title': 'Choose seats',
+        'price': 15
+      }, {
+        'id': 22,
+        'title': 'Upgrade to a business class',
+        'price': 100
+      }
+    ]
+  },
 ];
 
-export const generatePoint = ({
+const generatePoint = ({
   id = '0',
   basePrice = getRandomIntInclusive(0, 100),
   type = getRandomType(),
@@ -227,6 +322,7 @@ const points = [
 
   generatePoint({
     type: 'bus',
+    destination: destinations[2],
     basePrice: 500,
     startDate: new Date('2021-10-01T16:00:56.845Z'),
     finishDate: new Date('2021-10-03T12:00:56.845Z'),
@@ -237,5 +333,5 @@ export {
   points,
   destinations,
   offers,
-  POINT_CITIES,
+  //POINT_CITIES,
 };

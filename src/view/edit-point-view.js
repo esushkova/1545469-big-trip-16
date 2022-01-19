@@ -1,10 +1,9 @@
 import { POINT_TYPES } from '../const.js';
 import dayjs from 'dayjs';
 import { capitalizeFirstLetter } from '../utils/common.js';
-import AbstractView from './abstract-view.js';
+import SmartView from './smart-view.js';
 
 const createOffersListTemplate = (allOffers) => (
-
   `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
       <div class="event__available-offers">
@@ -15,6 +14,7 @@ const createOffersListTemplate = (allOffers) => (
           id="${id}"
           type="checkbox"
           name="${title}"
+          data-price="${price}"
           ${isChecked ? 'checked' : ''}
           >
           <label class="event__offer-label" for="${id}">
@@ -83,14 +83,18 @@ const createDestinationTemplate = (destination) =>
 
     </section>`;
 
-const createEditPointTemplate = (point, destinations, renderedOffers) => {
+const createEditPointTemplate = (data) => {
   const {
     type,
     startDate,
     finishDate,
     destination,
-    basePrice
-  } = point;
+    basePrice,
+    destinations,
+    renderedOffers,
+    hasOffers,
+    hasDestination,
+  } = data;
 
   const startTime = dayjs(startDate);
   const endTime = dayjs(finishDate);
@@ -142,7 +146,7 @@ const createEditPointTemplate = (point, destinations, renderedOffers) => {
         <span class="visually-hidden">Price</span>
         &euro;
       </label>
-      <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+      <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
     </div>
 
     <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -154,31 +158,47 @@ const createEditPointTemplate = (point, destinations, renderedOffers) => {
   </header>
   <section class="event__details">
 
-  ${renderedOffers.length === 0 ? '' : createOffersListTemplate(renderedOffers)}
-
-  ${destination.description.length === 0 && destination.pictures.length === 0 ? '' : createDestinationTemplate(destination)}
-
+  ${hasOffers ? createOffersListTemplate(renderedOffers) : ''}
+  ${hasDestination ? createDestinationTemplate(destination) : ''}
 
   </section>
 </form>
 </li>`;
 };
 
-export default class EditPointView extends AbstractView {
-  #point = null;
+export default class EditPointView extends SmartView {
   #destinations = [];
   #offers = [];
 
   constructor(point, destinations, offers) {
     super();
-    this.#point = point;
+
     this.#destinations = destinations;
     this.#offers = offers;
+
+    this._data = EditPointView.parsePointToData(point, destinations, offers);
+
+    this.#setInnerHandlers();
   }
 
   get template() {
-    const renderedOffers = getRenderedOffers(this.#point, this.#offers);
-    return createEditPointTemplate(this.#point, this.#destinations, renderedOffers);
+    return createEditPointTemplate(this._data);
+  }
+
+
+  reset = (point) => {
+
+    this.updateData(
+      this._data = EditPointView.parsePointToData(point, this.#destinations, this.#offers)
+    );
+
+    this.updateElement();
+  }
+
+  restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setSaveHandler(this._callback.submitForm);
+    this.setRollupButtonClickHandler(this._callback.rollupForm);
   }
 
   setSaveHandler = (callback) => {
@@ -193,11 +213,110 @@ export default class EditPointView extends AbstractView {
 
   #onFormSubmit = (evt) => {
     evt.preventDefault();
-    this._callback.submitForm(this.#point);
+
+    this.updateData({
+      offers: this.#parseOffersCheckbox(),
+    }, true);
+
+    this._callback.submitForm(EditPointView.parseDataToPoint(this._data));
   }
 
   #onRollupButtonClick = (evt) => {
     evt.preventDefault();
     this._callback.rollupForm();
+  }
+
+  #setInnerHandlers = () => {
+    const element = this.element;
+
+    element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
+    element.querySelector('.event__input--price').addEventListener('input', this.#onPriceChange);
+
+    const destination = element.querySelector('.event__input--destination');
+
+    destination.addEventListener('change', this.#onDestinationChange);
+    destination.addEventListener('keydown', this.#onDestinationKeydown);
+    destination.addEventListener('focus', this.#onDestinationFocus);
+  }
+
+  #onTypeChange = (evt) => {
+    evt.preventDefault();
+
+    this.updateData({
+      type: evt.target.value,
+      offer: this.#offers.find(({ type }) => evt.target.value === type).offers,
+    });
+  }
+
+  #onPriceChange = (evt) => {
+    evt.preventDefault();
+    this.updateData({ basePrice: evt.target.valueAsNumber }, true);
+  };
+
+  #onDestinationChange = (evt) => {
+    evt.preventDefault();
+
+    const newDestination = evt.target.value;
+    const destination = this.#destinations.find(({ name }) => name === newDestination);
+
+    this.updateData({ destination }, false);
+  };
+
+  #onDestinationKeydown = (evt) => {
+    evt.preventDefault();
+  }
+
+  #onDestinationFocus = (evt) => {
+    const target = evt.target;
+
+    target.placeholder = target.value;
+    target.value = '';
+
+    target.addEventListener('blur', () => {
+      target.value = target.placeholder;
+    }, { once: true });
+  }
+
+  #parseOffersCheckbox = () => {
+
+    const offersCollection = this.element.querySelectorAll('.event__offer-checkbox:checked');
+
+    const checkedOffers = [];
+
+    offersCollection.forEach((offer) => {
+      const checkedOffer = {};
+      checkedOffer.id = Number(offer.id);
+      checkedOffer.title = offer.name;
+      checkedOffer.price = Number(offer.dataset.price);
+
+      checkedOffers.push(checkedOffer);
+    });
+
+    return checkedOffers;
+  }
+
+
+  static parsePointToData = (point, destinations, offers) => {
+    const renderedOffers = getRenderedOffers(point, offers);
+    const { description, pictures } = point.destination;
+
+    return {
+      ...point,
+      renderedOffers,
+      destinations,
+      hasOffers: renderedOffers.length > 0,
+      hasDestination: description.length > 0 || pictures.length > 0,
+    };
+  };
+
+  static parseDataToPoint = (data) => {
+    const point = { ...data };
+
+    delete point.renderedOffers;
+    delete point.destinations;
+    delete point.hasOffers;
+    delete point.hasDestination;
+
+    return point;
   }
 }

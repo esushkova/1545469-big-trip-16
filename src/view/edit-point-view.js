@@ -291,7 +291,7 @@ export default class EditPointView extends SmartView {
 
     const checkedOffers = [];
 
-    offersCollection.forEach(offer => {
+    offersCollection.forEach((offer) => {
       const checkedOffer = {};
       checkedOffer.id = Number(offer.id);
       checkedOffer.title = offer.name;
@@ -299,8 +299,6 @@ export default class EditPointView extends SmartView {
 
       checkedOffers.push(checkedOffer);
     });
-
-    console.log(checkedOffers);
 
     return checkedOffers;
   }

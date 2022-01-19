@@ -1,5 +1,5 @@
 import TripCostView from '../view/trip-cost-view.js';
-import { render, RenderPosition } from '../utils/render.js';
+import { render, RenderPosition, replace, remove } from '../utils/render.js';
 import { calcTotalPrice } from '../utils/trip-cost.js';
 
 export default class InfoCostPresenter {

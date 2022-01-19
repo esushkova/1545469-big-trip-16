@@ -8,9 +8,9 @@ const MAX_CITIES_IN_TITLE = 3;
 const createTripTitleDatesTemplate = (points) => {
   const uniqueNames = new Set();
 
-points.forEach(({destination}) => {
-  uniqueNames.add(destination.name);
-});
+  points.forEach(({destination}) => {
+    uniqueNames.add(destination.name);
+  });
 
   const dateBegin = getFirstItem(points).startDate;
   const dateEnd = getLastItem(points).finishDate;

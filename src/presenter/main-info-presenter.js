@@ -2,7 +2,7 @@ import TripMainInfoView from '../view/trip-main-info-view.js';
 import TripTitleView from '../view/trip-title-view.js';
 import TripDatesView from '../view/trip-dates-view.js';
 
-import { render, RenderPosition } from '../utils/render.js';
+import { render, RenderPosition, replace, remove } from '../utils/render.js';
 import {
   getFirstItem,
   getLastItem,
@@ -18,8 +18,8 @@ const calcTripDates = (points) => {
   return {
     dateBegin: getFirstItem(points).startDate,
     dateEnd: getLastItem(points).finishDate,
-  }
-}
+  };
+};
 
 export default class MainInfoPresenter {
   #container = null;

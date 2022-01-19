@@ -166,7 +166,7 @@ const createEditPointTemplate = (data) => {
   </header>
   <section class="event__details">
 
-  ${hasOffers ? createOffersListTemplate(renderedOffers): ''}
+  ${hasOffers ? createOffersListTemplate(renderedOffers) : ''}
   ${hasDestination ? createDestinationTemplate(destination) : ''}
 
   </section>
@@ -174,7 +174,7 @@ const createEditPointTemplate = (data) => {
 </li>`;
 };
 
-export default class EditPointView extends SmartView{
+export default class EditPointView extends SmartView {
   #destinations = [];
   #offers = [];
 
@@ -195,20 +195,12 @@ export default class EditPointView extends SmartView{
 
 
   reset = (point) => {
-/*
-1) корректно обновилось (или создалось заново) значение _data
-2) на основе новой _data обновился элемент
-
-Если без рефакторинга, то будет достаточно напрямую переопределить значение _data,
-как это сделано в конструкторе
-*/
 
     this.updateData(
-      EditPointView.parsePointToData(point),
+      this._data = EditPointView.parsePointToData(point, this.#destinations, this.#offers)
     );
 
-    this.updateElement()
-
+    this.updateElement();
   }
 
   restoreHandlers = () => {
@@ -260,7 +252,7 @@ export default class EditPointView extends SmartView{
 
     this.updateData({
       type: evt.target.value,
-      offer: this.#offers.find(({type}) => evt.target.value === type).offers,
+      offer: this.#offers.find(({ type }) => evt.target.value === type).offers,
     });
   }
 
@@ -290,7 +282,7 @@ export default class EditPointView extends SmartView{
 
     target.addEventListener('blur', () => {
       target.value = target.placeholder;
-    }, {once: true});
+    }, { once: true });
   }
 
   #parseOffersCheckbox = () => {
@@ -328,7 +320,7 @@ export default class EditPointView extends SmartView{
   };
 
   static parseDataToPoint = (data) => {
-    const point = {...data};
+    const point = { ...data };
 
     delete point.renderedOffers;
     delete point.destinations;

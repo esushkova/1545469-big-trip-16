@@ -9,9 +9,9 @@ const MAX_CITIES_IN_TITLE = 3;
 const createTripTitleTemplate = (uniqueNames) => (
   `<h1 class="trip-info__title">
       ${uniqueNames.length > MAX_CITIES_IN_TITLE
-        ? `${getFirstItem(uniqueNames)} — ... — ${getLastItem(uniqueNames)}`
-        : `${getFirstItem(uniqueNames)} — ${getLastItem(uniqueNames)}`
-      }
+      ? `${getFirstItem(uniqueNames)} — ... — ${getLastItem(uniqueNames)}`
+      : `${getFirstItem(uniqueNames)} — ${getLastItem(uniqueNames)}`
+    }
   </h1>`
 );
 

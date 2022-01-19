@@ -283,7 +283,6 @@ export default class EditPointView extends SmartView {
     return checkedOffers;
   }
 
-
   static parsePointToData = (point, destinations, allOffers) => {
     const {
       type,
@@ -302,15 +301,6 @@ export default class EditPointView extends SmartView {
       hasDestination: description.length > 0 || pictures.length > 0,
     };
   };
-
-  static parseDataToPoint = ({
-    destinationNames,
-    hasOffers,
-    hasDestination,
-    ...point
-  }) => point;
-
-
 
   static parseDataToPoint = ({
     destinationNames,

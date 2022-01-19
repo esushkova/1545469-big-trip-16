@@ -3,14 +3,6 @@ import dayjs from 'dayjs';
 import { capitalizeFirstLetter } from '../utils/common.js';
 import SmartView from './smart-view.js';
 
-
-/*
-{
-        'id': 7,
-        'title': 'Upgrade to a business class',
-        'price': 100
-      }
-**/
 const createOffersListTemplate = (allOffers) => (
   `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>

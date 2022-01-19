@@ -309,4 +309,20 @@ export default class EditPointView extends SmartView {
     hasDestination,
     ...point
   }) => point;
+
+
+
+  static parseDataToPoint = ({
+    destinationNames,
+    hasOffers,
+    hasDestination,
+    ...point
+  }) => {
+
+    delete point.destinationNames;
+    delete point.hasOffers;
+    delete point.hasDestination;
+
+    return point;
+  }
 }

@@ -27,23 +27,13 @@ const createOffersListTemplate = (allOffers) => (
     </section>`
 );
 
-const createDestinationListTemplate = (destinations) =>
-  destinations.map(({ name }) => `<option value="${name}"></option>`).join('');
+const getTypeOffers = (type, allOffers) => allOffers.find((offer) => offer.type === type)?.offers ?? [];
 
-const getRenderedOffers = (point, allOffers) => {
-  const pointOffers = point.offers;
-  const typeOffers = allOffers.find((offer) => offer.type === point.type).offers || [];
-
-  const offers = [];
-  typeOffers.forEach((typeOffer) => {
-    offers.push({
-      ...typeOffer,
-      isChecked: pointOffers.some((offer) => offer.id === typeOffer.id),
-    });
-  });
-
-  return offers;
-};
+const getRenderedOffers = (offers, typeOffers) => typeOffers
+  .map((typeOffer) => ({
+    ...typeOffer,
+    isChecked: offers.some(({ id }) => id === typeOffer.id),
+  }));
 
 const createTypeItemTemplate = (type, pointType) => (
   `<div class="event__type-item">
@@ -67,21 +57,8 @@ const createEventTypeTemplate = (pointTypes, pointType) => (
     .join('')
 );
 
-const createDestinationPicturesTemplate = (destination) =>
-  `<div class="event__photos-container">
-    <div class="event__photos-tape">
-      ${destination.pictures.map(({ src, description }) => `<img class="event__photo" src="${src}" alt="${description}">`).join('')}
-    </div>
-  </div>`;
-
-const createDestinationTemplate = (destination) =>
-  `<section class="event__section  event__section--destination">
-    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${destination.description}</p>
-
-    ${destination.pictures.length > 0 ? createDestinationPicturesTemplate(destination) : ''}
-
-    </section>`;
+const createDestinationTemplate = (name) => `<option value="${name}"></option>`;
+const createDestinationListTemplate = (destinations) => destinations.map(createDestinationTemplate).join('');
 
 const createEditPointTemplate = (data) => {
   const {
@@ -90,8 +67,8 @@ const createEditPointTemplate = (data) => {
     finishDate,
     destination,
     basePrice,
-    destinations,
-    renderedOffers,
+    offers,
+    destinationNames,
     hasOffers,
     hasDestination,
   } = data;
@@ -129,7 +106,7 @@ const createEditPointTemplate = (data) => {
       value="${destination.name}"
       list="destination-list-1">
       <datalist id="destination-list-1">
-      ${createDestinationListTemplate(destinations)}
+      ${createDestinationListTemplate(destinationNames)}
       </datalist>
     </div>
 
@@ -158,7 +135,7 @@ const createEditPointTemplate = (data) => {
   </header>
   <section class="event__details">
 
-  ${hasOffers ? createOffersListTemplate(renderedOffers) : ''}
+  ${hasOffers ? createOffersListTemplate(offers) : ''}
   ${hasDestination ? createDestinationTemplate(destination) : ''}
 
   </section>
@@ -185,14 +162,11 @@ export default class EditPointView extends SmartView {
     return createEditPointTemplate(this._data);
   }
 
-
   reset = (point) => {
-
     this.updateData(
-      this._data = EditPointView.parsePointToData(point, this.#destinations, this.#offers)
+      this._data = EditPointView.parsePointToData(point, this.#destinations, this.#offers),
+      false,
     );
-
-    this.updateElement();
   }
 
   restoreHandlers = () => {
@@ -214,11 +188,10 @@ export default class EditPointView extends SmartView {
   #onFormSubmit = (evt) => {
     evt.preventDefault();
 
-    this.updateData({
-      offers: this.#parseOffersCheckbox(),
-    }, true);
+    const point = EditPointView.parseDataToPoint(this._data);
+    point.offers = this.#parseOffersCheckbox(); // не реализован
 
-    this._callback.submitForm(EditPointView.parseDataToPoint(this._data));
+    this._callback.submitForm(point);
   }
 
   #onRollupButtonClick = (evt) => {
@@ -242,15 +215,30 @@ export default class EditPointView extends SmartView {
   #onTypeChange = (evt) => {
     evt.preventDefault();
 
-    this.updateData({
-      type: evt.target.value,
-      offer: this.#offers.find(({ type }) => evt.target.value === type).offers,
-    });
+    const type = evt.target.value;
+    const typeOffers = getTypeOffers(type, this.#offers);
+    const offers = getRenderedOffers([], typeOffers);
+
+    this.updateData({ type, offers }, false);
   }
 
   #onPriceChange = (evt) => {
     evt.preventDefault();
-    this.updateData({ basePrice: evt.target.valueAsNumber }, true);
+    const priceValue = Number(evt.target.value) > 0 ? evt.target.value : '';
+    const priceInput = this.element.querySelector('.event__input--price');
+    const saveButton = this.element.querySelector('.event__save-btn');
+
+    if (!priceValue) {
+      priceInput.setCustomValidity('Invalid value. Cannot be less than zero!');
+      priceInput.reportValidity();
+      saveButton.disabled = true;
+    } else {
+      priceInput.setCustomValidity('');
+      priceInput.reportValidity();
+      saveButton.disabled = false;
+
+      this.updateData({ basePrice: evt.target.valueAsNumber }, true);
+    }
   };
 
   #onDestinationChange = (evt) => {
@@ -279,11 +267,11 @@ export default class EditPointView extends SmartView {
 
   #parseOffersCheckbox = () => {
 
-    const offersCollection = this.element.querySelectorAll('.event__offer-checkbox:checked');
+    const checkedElements = this.element.querySelectorAll('.event__offer-checkbox:checked');
 
     const checkedOffers = [];
 
-    offersCollection.forEach((offer) => {
+    checkedElements.forEach((offer) => {
       const checkedOffer = {};
       checkedOffer.id = Number(offer.id);
       checkedOffer.title = offer.name;
@@ -296,27 +284,29 @@ export default class EditPointView extends SmartView {
   }
 
 
-  static parsePointToData = (point, destinations, offers) => {
-    const renderedOffers = getRenderedOffers(point, offers);
-    const { description, pictures } = point.destination;
+  static parsePointToData = (point, destinations, allOffers) => {
+    const {
+      type,
+      offers,
+      destination: { description, pictures },
+    } = point;
+
+    const typeOffers = getTypeOffers(type, allOffers);
+    const dataOffers = getRenderedOffers(offers, typeOffers);
 
     return {
       ...point,
-      renderedOffers,
-      destinations,
-      hasOffers: renderedOffers.length > 0,
+      offers: dataOffers,
+      destinationNames: destinations.map(({ name }) => name),
+      hasOffers: dataOffers.length > 0,
       hasDestination: description.length > 0 || pictures.length > 0,
     };
   };
 
-  static parseDataToPoint = (data) => {
-    const point = { ...data };
-
-    delete point.renderedOffers;
-    delete point.destinations;
-    delete point.hasOffers;
-    delete point.hasDestination;
-
-    return point;
-  }
+  static parseDataToPoint = ({
+    destinationNames,
+    hasOffers,
+    hasDestination,
+    ...point
+  }) => point;
 }

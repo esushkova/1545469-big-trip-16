@@ -32,3 +32,17 @@ export const getFirstItem = (items) => items[0];
 
 export const getLastItem = (items) => items[items.length - 1];
 
+const addZero = (number) => {
+  if (number < 10) {
+    return `0${number}`;
+  }
+  return number;
+};
+
+export const calcDatesDiff = (timeStart, timeEnd) => {
+  const minutesDuration = timeEnd.diff(timeStart, 'minutes') % 60 > 0 ? `${addZero(timeEnd.diff(timeStart, 'minutes') % 60)}M` : '';
+  const hoursDuration = timeEnd.diff(timeStart, 'hours') % 24 > 0 ? `${addZero(timeEnd.diff(timeStart, 'hours') % 24)}H ` : '';
+  const daysDuration = timeEnd.diff(timeStart, 'days') > 0 ? `${addZero(timeEnd.diff(timeStart, 'days'))}D ` : '';
+
+  return daysDuration + hoursDuration + minutesDuration;
+};

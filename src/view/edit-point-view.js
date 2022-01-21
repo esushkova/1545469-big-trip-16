@@ -4,7 +4,7 @@ import { capitalizeFirstLetter } from '../utils/common.js';
 import SmartView from './smart-view.js';
 
 import flatpickr from 'flatpickr';
-import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+import 'flatpickr/dist/flatpickr.min.css';
 
 const createOffersListTemplate = (allOffers) => (
   `<section class="event__section  event__section--offers">
@@ -126,11 +126,11 @@ const createEditPointTemplate = (data) => {
         <span class="visually-hidden">Price</span>
         &euro;
       </label>
-      <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
+      <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" min="0" value="${basePrice}">
     </div>
 
     <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-    <button class="event__reset-btn" type="reset">Close</button>
+    <button class="event__reset-btn" type="reset">Delete</button>
 
     <button class="event__rollup-btn" type="button">
       <span class="visually-hidden">Open event</span>
@@ -147,7 +147,7 @@ const createEditPointTemplate = (data) => {
 };
 
 export default class EditPointView extends SmartView {
-  #datepickerSrart = null;
+  #datepickerStart = null;
   #datepickerEnd = null;
 
   #destinations = [];
@@ -175,9 +175,9 @@ export default class EditPointView extends SmartView {
   removeElement = () => {
     super.removeElement();
 
-    if (this.#datepickerSrart) {
-      this.#datepickerSrart.destroy();
-      this.#datepickerSrart = null;
+    if (this.#datepickerStart) {
+      this.#datepickerStart.destroy();
+      this.#datepickerStart = null;
     }
 
     if(this.#datepickerEnd) {
@@ -215,7 +215,7 @@ export default class EditPointView extends SmartView {
 
   #setDatepickerStart = () => {
     if (this._data.startDate) {
-      this.#datepickerSrart = flatpickr(
+      this.#datepickerStart = flatpickr(
         this.element.querySelector('#event-start-time-1'),
         {
           dateFormat: 'd/m/Y H:i',
@@ -257,7 +257,7 @@ export default class EditPointView extends SmartView {
     evt.preventDefault();
 
     const point = EditPointView.parseDataToPoint(this._data);
-    point.offers = this.#parseOffersCheckbox(); // не реализован
+    point.offers = this.#parseOffersCheckbox();
 
     this._callback.submitForm(point);
   }
@@ -271,7 +271,6 @@ export default class EditPointView extends SmartView {
     const element = this.element;
 
     element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
-    element.querySelector('.event__input--price').addEventListener('input', this.#onPriceChange);
 
     const destination = element.querySelector('.event__input--destination');
 
@@ -289,25 +288,6 @@ export default class EditPointView extends SmartView {
 
     this.updateData({ type, offers }, false);
   }
-
-  #onPriceChange = (evt) => {
-    evt.preventDefault();
-    const priceValue = Number(evt.target.value) > 0 ? evt.target.value : '';
-    const priceInput = this.element.querySelector('.event__input--price');
-    const saveButton = this.element.querySelector('.event__save-btn');
-
-    if (!priceValue) {
-      priceInput.setCustomValidity('Invalid value. Cannot be less than zero!');
-      priceInput.reportValidity();
-      saveButton.disabled = true;
-    } else {
-      priceInput.setCustomValidity('');
-      priceInput.reportValidity();
-      saveButton.disabled = false;
-
-      this.updateData({ basePrice: evt.target.valueAsNumber }, true);
-    }
-  };
 
   #onDestinationChange = (evt) => {
     evt.preventDefault();
@@ -370,12 +350,8 @@ export default class EditPointView extends SmartView {
     };
   };
 
-  static parseDataToPoint = ({
-    destinationNames,
-    hasOffers,
-    hasDestination,
-    ...point
-  }) => {
+  static parseDataToPoint = (data) => {
+    const point = {...data};
 
     delete point.destinationNames;
     delete point.hasOffers;

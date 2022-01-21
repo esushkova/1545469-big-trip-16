@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 
 const ESCAPE_KEYS = ['Escape', 'Esc'];
+const ZERO_FRONTIER = 10;
 
 export const capitalizeFirstLetter = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
@@ -32,11 +33,11 @@ export const getFirstItem = (items) => items[0];
 
 export const getLastItem = (items) => items[items.length - 1];
 
-const addZero = (number) => {
-  if (number < 10) {
-    return `0${number}`;
+const addZero = (count) => {
+  if (count < ZERO_FRONTIER) {
+    return `0${count}`;
   }
-  return number;
+  return count;
 };
 
 export const calcDatesDiff = (timeStart, timeEnd) => {

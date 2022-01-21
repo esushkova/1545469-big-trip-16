@@ -219,6 +219,7 @@ export default class EditPointView extends SmartView {
         this.element.querySelector('#event-start-time-1'),
         {
           dateFormat: 'd/m/Y H:i',
+          enableTime: true,
           defaultDate: this._data.startDate,
           onChange: this.#onDateStartChange,
         },
@@ -231,6 +232,7 @@ export default class EditPointView extends SmartView {
         this.element.querySelector('#event-end-time-1'),
         {
           dateFormat: 'd/m/Y H:i',
+          enableTime: true,
           defaultDate: this._data.finishDate,
           onChange: this.#onDateEndChange,
         },

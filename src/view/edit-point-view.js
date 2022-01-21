@@ -3,6 +3,9 @@ import dayjs from 'dayjs';
 import { capitalizeFirstLetter } from '../utils/common.js';
 import SmartView from './smart-view.js';
 
+import flatpickr from 'flatpickr';
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+
 const createOffersListTemplate = (allOffers) => (
   `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
@@ -144,6 +147,9 @@ const createEditPointTemplate = (data) => {
 };
 
 export default class EditPointView extends SmartView {
+  #datepickerSrart = null;
+  #datepickerEnd = null;
+
   #destinations = [];
   #offers = [];
 
@@ -156,10 +162,28 @@ export default class EditPointView extends SmartView {
     this._data = EditPointView.parsePointToData(point, destinations, offers);
 
     this.#setInnerHandlers();
+
+    this.#setDatepickerStart();
+    this.#setDatepickerEnd();
+
   }
 
   get template() {
     return createEditPointTemplate(this._data);
+  }
+
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#datepickerSrart) {
+      this.#datepickerSrart.destroy();
+      this.#datepickerSrart = null;
+    }
+
+    if(this.#datepickerEnd) {
+      this.#datepickerEnd.destroy();
+      this.#datepickerEnd = null;
+    }
   }
 
   reset = (point) => {
@@ -171,6 +195,10 @@ export default class EditPointView extends SmartView {
 
   restoreHandlers = () => {
     this.#setInnerHandlers();
+
+    this.#setDatepickerStart();
+    this.#setDatepickerEnd();
+
     this.setSaveHandler(this._callback.submitForm);
     this.setRollupButtonClickHandler(this._callback.rollupForm);
   }
@@ -184,6 +212,44 @@ export default class EditPointView extends SmartView {
     this._callback.rollupForm = callback;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onRollupButtonClick);
   }
+
+  #setDatepickerStart = () => {
+    if (this._data.startDate) {
+      this.#datepickerSrart = flatpickr(
+        this.element.querySelector('#event-start-time-1'),
+        {
+          dateFormat: 'd/m/Y H:i',
+          defaultDate: this._data.startDate,
+          onChange: this.#onDateStartChange,
+        },
+      );}
+  }
+
+  #setDatepickerEnd = () => {
+    if (this._data.finishDate) {
+      this.#datepickerEnd = flatpickr(
+        this.element.querySelector('#event-end-time-1'),
+        {
+          dateFormat: 'd/m/Y H:i',
+          defaultDate: this._data.finishDate,
+          onChange: this.#onDateEndChange,
+        },
+      );
+    }
+  }
+
+  #onDateStartChange = ([userDate]) => {
+    this.updateData({
+      startDate: userDate,
+    });
+  }
+
+  #onDateEndChange = ([userDate]) => {
+    this.updateData({
+      finishDate: userDate,
+    });
+  }
+
 
   #onFormSubmit = (evt) => {
     evt.preventDefault();

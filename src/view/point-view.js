@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import AbstractView from './abstract-view.js';
+import { calcDatesDiff } from '../utils/common.js';
 
 const createOfferTemplate = ({ title, price }) => (
   `<li class="event__offer">
@@ -35,7 +36,7 @@ const createPointTemplate = (point) => {
           &mdash;
           <time class="event__end-time" datetime="${endTime.toISOString()}">${endTime.format('HH:mm')}</time>
         </p>
-        <p class="event__duration">30M</p>
+        <p class="event__duration">${calcDatesDiff(startTime, endTime)}</p>
       </div>
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>

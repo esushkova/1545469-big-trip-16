@@ -19,7 +19,7 @@ export default class InfoCostPresenter {
     this.#tripCostComponent = new TripCostView(totalPrice);
 
     if (prevTripCostComponent === null) {
-      render(this.#container, this.#tripCostComponent, RenderPosition.AFTER_BEGIN);
+      render(this.#container, this.#tripCostComponent, RenderPosition.BEFORE_END);
       return;
     }
 

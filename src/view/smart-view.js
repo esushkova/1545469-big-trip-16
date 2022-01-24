@@ -3,7 +3,7 @@ import AbstractView from './abstract-view.js';
 export default class SmartView extends AbstractView {
   _data = {};
 
-  updateData = (update, isJustDataUpdating) => {
+  updateData = (update, isJustDataUpdating = true) => {
     if (!update) {
       return;
     }
@@ -18,13 +18,13 @@ export default class SmartView extends AbstractView {
   }
 
   updateElement = () => {
-    const prevElement = this.element;
-    const parent = prevElement.parentElement;
+    const prevUnit = this.element;
+    const parent = prevUnit.parentElement;
     this.removeElement();
 
-    const newElement = this.element;
+    const newUnit = this.element;
 
-    parent.replaceChild(newElement, prevElement);
+    parent.replaceChild(newUnit, prevUnit);
 
     this.restoreHandlers();
   }

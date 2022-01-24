@@ -13,7 +13,7 @@ const filtersContainer = document.querySelector('.trip-controls__filters');
 const tripMainInfoPresenter = new TripMainInfoPresenter(tripMainInfo);
 tripMainInfoPresenter.init(points);
 
-const infoCostPresenter = new InfoCostPresenter(tripMainContainer);
+const infoCostPresenter = new InfoCostPresenter(tripMainInfo);
 infoCostPresenter.init(points);
 
 const tripPresenter = new TripPresenter(contentContainer, menuContainer, filtersContainer);

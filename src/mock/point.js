@@ -257,7 +257,7 @@ const offers = [
     offers: [
       {
         'id': 20,
-        'title': 'Add meal',
+        'title': 'Leave a tip',
         'price': 20
       }, {
         'id': 21,

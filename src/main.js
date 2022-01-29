@@ -2,6 +2,7 @@ import { points, destinations, offers } from './mock/point.js';
 import TripPresenter from './presenter/trip-presenter.js';
 import TripMainInfoPresenter from './presenter/main-info-presenter.js';
 import InfoCostPresenter from './presenter/info-cost-presenter.js';
+
 import PointsModel from './model/points-model.js';
 
 const contentContainer = document.querySelector('.trip-events');
@@ -21,4 +22,4 @@ const infoCostPresenter = new InfoCostPresenter(tripMainInfo);
 infoCostPresenter.init(points);
 
 const tripPresenter = new TripPresenter(contentContainer, menuContainer, filtersContainer, pointsModel);
-tripPresenter.init();
+tripPresenter.init(destinations, offers);

@@ -23,6 +23,7 @@ export const updateItemById = (items, update) => {
 };
 */
 
+
 export const sortPointByPrice = (point1, point2) => point1.basePrice - point2.basePrice;
 
 export const sortPointByTime = (point1, point2) => (point2.finishDate - point2.startDate) - (point1.finishDate - point1.startDate);

@@ -5,7 +5,7 @@ export default class PointsModel extends AbstractObservable {
 
   set points(points) {
     this.#points = [...points];
-  }
+  };
 
   get points() {
     return this.#points;
